@@ -33,8 +33,8 @@ const SocialLinks = ({ socialLinks }) => {
   ];
   return (
     <>
-      <h2 className="font-bold text-left">Redes sociales</h2>
-      <ul className="flex gap-5 flex-wrap">
+      <h2 className="font-bold">Redes sociales</h2>
+      <ul className="flex gap-5 flex-wrap w-full justify-between">
         {socialMediaPlatforms.map(({ platform, url, icon }) =>
           url ? (
             <li className="bg-gray-200 rounded-full p-4 flex justify-center items-center" key={platform}>

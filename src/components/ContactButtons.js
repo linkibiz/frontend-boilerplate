@@ -26,7 +26,7 @@ const contactIcons = [
 const ContactButtons = ({ contactButtons }) => {
   const buttons = contactButtons.attributes.botones;
   return (
-    <div className="flex gap-10 justify-center items-center w-full flex-wrap">
+    <div className="flex gap-10 justify-between items-center w-full flex-wrap">
       {buttons.map((button) => {
         const src = button.foto.data[0].attributes.url
         const myLoader = ({ src }) => {
