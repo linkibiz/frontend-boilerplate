@@ -5,18 +5,18 @@ const Links = ({ linksList }) => {
   return (
     <>
       {linksList && (
-        <div className="flex flex-col gap-3 w-full items-center">
+        <div className="flex flex-col gap-3 w-full items-left">
           <p className="font-bold">Links</p>
-          {/* {linksList.map((link) => (
+          {linksList.map((link) => (
             <Link
               href={link.url}
               target={link.target}
-              className="p-3 font-bold w-4/5 text-center bg-black rounded-md text-white"
+              className="w-full p-3 font-bold w-4/5 text-center bg-black rounded-md text-white"
               key={link.id}
             >
               {link.titulo}
             </Link>
-          ))} */}
+          ))}
         </div>
       )}
     </>

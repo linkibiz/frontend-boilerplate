@@ -1,3 +1,4 @@
+import About from "@/components/About";
 import Banner from "@/components/Banner";
 import ContactButtons from "@/components/ContactButtons";
 import Footer from "@/components/Footer";
@@ -21,8 +22,9 @@ const Perfil = ({ data }) => {
       <Wrapper>
         <Profile profileData={data} />
         <Vcard vcardData={data} />
+        <About info={data} />
         <ContactButtons contactButtons={data} />
-        {/* <Links linksList={data.attributes.links} /> */}
+        <Links linksList={data.attributes.links} />
         <SocialLinks socialLinks={data.attributes.redes_sociales} /> 
       </Wrapper>
       {/* <Footer/> */}
