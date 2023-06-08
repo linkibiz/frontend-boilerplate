@@ -9,7 +9,7 @@ const Profile = ({ profileData }) => {
     imagenes: { foto_perfil },
   } = profileData.attributes;
 
-  const src = foto_perfil.data.attributes.url
+  const src = foto_perfil.data.attributes.url || 'https://res.cloudinary.com/dxahth8ul/image/upload/v1685506549/small_joel_jasmin_forestbird_N7_WK_Dfi0yq_Q_unsplash_jpg_a6d1fd24f6.png'
   const myLoader = ({ src }) => {
     return src
   }

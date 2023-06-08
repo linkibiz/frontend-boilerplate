@@ -12,20 +12,20 @@ import { useRouter } from "next/router";
 import React from "react";
 
 const Perfil = ({ data }) => {
-  console.log(data)
+  console.log(data.attributes.links.length);
   const router = useRouter();
   const { slug } = router.query;
   const pageTitle = slug.split("-").join(" ").toUpperCase();
   return (
     <Layout pageName={pageTitle}>
-      <Banner banner={data}/>
+      {/* <Banner banner={data} /> */}
       <Wrapper>
-        <Profile profileData={data} />
-        <Vcard vcardData={data} />
-        <About info={data} />
-        <ContactButtons contactButtons={data} />
-        <Links linksList={data.attributes.links} />
-        <SocialLinks socialLinks={data.attributes.redes_sociales} /> 
+        {/* <Profile profileData={data} /> */}
+        {data.attributes.vcard != null && <Vcard vcardData={data} />}
+        {data.attributes.sobre_mi != "" && <About info={data} />}
+        {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data} />}
+        {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
+        {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
       </Wrapper>
       {/* <Footer/> */}
     </Layout>
@@ -36,7 +36,7 @@ export default Perfil;
 
 export async function getServerSideProps({ query: { slug } }) {
   const url = `${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles?filters[slug][$eq]=${slug}&populate=deep`;
-  console.log(url)
+  console.log(url);
   const req = await fetch(url);
   const res = await req.json();
   const data = res.data[0];

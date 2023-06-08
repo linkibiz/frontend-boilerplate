@@ -17,7 +17,6 @@ const Login = () => {
       email,
       password,
     };
-    console.log(userData);
     // try {
     //   const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, userData);
 

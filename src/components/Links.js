@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 const Links = ({ linksList }) => {
-  console.log(linksList)
   return (
     <>
       {linksList.length > 0 && (
