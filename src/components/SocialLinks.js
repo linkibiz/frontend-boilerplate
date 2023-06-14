@@ -8,7 +8,6 @@ import TwitterIcon from "./Icons/TwitterIcon";
 
 const SocialLinks = ({ socialLinks }) => {
   const { facebook, instagram, linkedin, twitter  } = socialLinks;
-  console.log(socialLinks);
   const socialMediaPlatforms = [
     {
       platform: "facebook",

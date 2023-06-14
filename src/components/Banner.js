@@ -5,7 +5,7 @@ import Logo from "../../public/images/linki-logo.png";
 
 const Banner = ({banner}) => {
   // bg-gradient-to-r from-[#4eb1c7] via-[#384a74] to-[#483e83]
-  const src = banner.attributes.imagenes.banner.data?.attributes.url || 'https://res.cloudinary.com/dxahth8ul/image/upload/v1685506549/small_joel_jasmin_forestbird_N7_WK_Dfi0yq_Q_unsplash_jpg_a6d1fd24f6.png'
+  const src = banner.attributes.banner.data?.attributes.url || 'https://res.cloudinary.com/dxahth8ul/image/upload/v1685506549/small_joel_jasmin_forestbird_N7_WK_Dfi0yq_Q_unsplash_jpg_a6d1fd24f6.png'
   const myLoader = ({ src }) => {
     return src
   }
