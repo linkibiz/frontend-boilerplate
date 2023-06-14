@@ -13,7 +13,7 @@ const Banner = ({banner}) => {
       <Image src={Logo} className="z-10 max-h-8 object-contain absolute top-4 left-4 w-32" />
       <div className="brightness-50">
         <Image 
-          className="h-full max-h-60 object-cover object-bottom" 
+          className="h-[250px] object-cover object-bottom" 
           loader={myLoader}
           width={500}
           height={500}

@@ -5,9 +5,10 @@ import WebsiteIcon from "./Icons/WebsiteIcon";
 import LinkedinIcon from "./Icons/LinkedinIcon";
 import Link from "next/link";
 import TwitterIcon from "./Icons/TwitterIcon";
+import TikTokIcon from "./Icons/TikTokIcon";
 
 const SocialLinks = ({ socialLinks }) => {
-  const { facebook, instagram, linkedin, twitter  } = socialLinks;
+  const { facebook, instagram, linkedin, twitter, tik_tok  } = socialLinks;
   console.log(socialLinks);
   const socialMediaPlatforms = [
     {
@@ -30,6 +31,11 @@ const SocialLinks = ({ socialLinks }) => {
       url: linkedin,
       icon: <LinkedinIcon />,
     },
+    {
+      platform: "linkedin",
+      url: tik_tok,
+      icon: <TikTokIcon />,
+    }
   ];
   return (
     <>
@@ -37,7 +43,7 @@ const SocialLinks = ({ socialLinks }) => {
       <ul className="flex gap-5 flex-wrap w-full justify-between">
         {socialMediaPlatforms.map(({ platform, url, icon }) =>
           url ? (
-            <li className="bg-[#1e478c] rounded-full p-4 flex justify-center items-center" key={platform}>
+            <li className="bg-[#ff0b86] rounded-full p-3 flex justify-center items-center" key={platform}>
               <Link className="h-6 w-6" href={url}>{icon}</Link>
             </li>
           ) : null

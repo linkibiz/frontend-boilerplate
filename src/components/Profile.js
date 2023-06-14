@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useEffect } from "react";
-import PrdLogo from '../../public/images/logo-azul.png'
-import Prd from '../../public/images/prd-logo.jpg'
+import RoLogo from '../../public/images/romulo-logo.png'
+import CdLogo from '../../public/images/cd-logo.png'
 const Profile = ({ profileData }) => {
   const {
     nombre_completo,
@@ -27,8 +27,8 @@ const Profile = ({ profileData }) => {
             alt={`Foto de ${nombre_completo}`}
           />
           <div className="text-black w-full px-4 flex flex-col items-center gap-y-3.5">
-            <Image src={PrdLogo} width={200} height={100} alt="Imagen de Gaby Carrizo"/>
-            <Image src={Prd} width={50} height={50} alt="Imagen de Gaby Carrizo"/>
+            <Image src={RoLogo} width={200} height={100} alt="Imagen de Gaby Carrizo"/>
+            <Image src={CdLogo} width={50} height={50} alt="Imagen de Gaby Carrizo"/>
             {/* <h1 className="font-bold text-3xl text-center">{nombre_completo}</h1>
             <p className="text-xs tracking-wider font-bold">{description}</p> */}
           </div>

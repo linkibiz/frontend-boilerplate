@@ -13,14 +13,14 @@ const Links = ({ linksList }) => {
                 <Link
                   href={link.url}
                   target={link.target}
-                  className="w-full p-3 font-bold w-4/5 text-center bg-[#1e478c] rounded-md text-white"
+                  className="w-full p-3 font-bold w-4/5 text-center bg-[#00a499] rounded-md text-white"
                   key={link.id}
                 >
                   {link.titulo}
                 </Link>
               ) : (
                 <button
-                  className="w-full p-3 font-bold text-center bg-[#1e478c] rounded-md text-white"
+                  className="w-full p-3 font-bold text-center bg-[#00a499] rounded-md text-white"
                   key={link.id}
                   onClick={() => setShowModal(true)}
                 >
@@ -40,12 +40,11 @@ const Links = ({ linksList }) => {
                         {/*body*/}
                         <div className="relative p-6 flex-auto">
                           <p className="my-4 text-slate-500 text-lg leading-relaxed">
-                            I always felt like I could do anything. That’s the main thing people are controlled by! Thoughts- their
-                            perception won’t do anything. I was taught I could do everything.
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et mollis mi, vel malesuada dui. Vestibulum eget euismod metus, a ornare ex. Mauris et sapien venenatis, mollis libero vel, consequat orci.
                           </p>
                         </div>
                         {/*footer*/}
-                        <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
+                        <div className="flex items-center justify-center p-2 border-t border-solid border-slate-200 rounded-b">
                           <button
                             className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
