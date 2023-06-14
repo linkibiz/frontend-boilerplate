@@ -30,6 +30,7 @@ const SocialLinks = ({ socialLinks }) => {
       url: linkedin,
       icon: <LinkedinIcon />,
     },
+    
   ];
   return (
     <>

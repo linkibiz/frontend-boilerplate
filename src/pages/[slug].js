@@ -27,6 +27,7 @@ const Perfil = ({ data }) => {
         {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
         {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
       </Wrapper>
+      
       {/* <Footer/> */}
     </Layout>
   );
