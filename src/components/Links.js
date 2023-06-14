@@ -12,7 +12,7 @@ const Links = ({ linksList }) => {
               {link.titulo != "Biografía" ? (
                 <Link
                   href={link.url}
-                  target={link.target}
+                  target="_blank"
                   className="w-full p-3 font-bold w-4/5 text-center bg-[#00a499] rounded-md text-white"
                   key={link.id}
                 >
