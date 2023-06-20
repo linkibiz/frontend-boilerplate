@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext,useState } from "react";
+import { AuthContext } from "@/context/auth-context";
 import Layout from "@/components/Layout";
 import Logo from "../../public/images/linki-logo.png";
 import Image from "next/image";
@@ -9,19 +10,9 @@ import CreateProfile from "@/components/CreateProfile";
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [userId, setUserId] = useState();
-
-  const userData = {
-    username: "",
-    email: "",
-    password: "",
-  };
-
-  const profileData = {
-    nombre_completo: "",
-    sobre_mi: "",
-    slug: "",
-  };
+  const [userId, setUserId] = useState()
+  const { userData, profileData } = useContext(AuthContext); // use AuthContext
+ 
 
   const [profileID, setProfileID] = useState();
   const [slug, setSlug] = useState();

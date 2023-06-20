@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useForm from "../hooks/useForm";
 import axios from "axios";
+import { AuthContext } from "@/context/auth-context";
 
 const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
-  const [values, handleChange] = useForm(initialData);
+  const {  profileData, setProfileData } = useContext(AuthContext);
+  
+  const handleProfileInputChange = (e) => {
+    setProfileData({ ...profileData, [e.target.name]: e.target.value });
+  };
+  
   const [socialLinks, setSocialLinks] = useState({
     facebook: "",
     linkedin: "",
@@ -19,10 +25,10 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
     e.preventDefault();
     try {
       // Generate slug
-      const slug = values.nombre_completo.toLowerCase().replace(/\s+/g, "-");
+      const slug = profileData.nombre_completo.toLowerCase().replace(/\s+/g, "-");
       // Create profile with user relation
       const profileDataWithRelation = {
-        ...values,
+        ...profileData,
         user: userId,
         slug: `${slug}-${userId}`,
         redes_sociales: {
@@ -59,8 +65,8 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
               <input
                 type="text"
                 name="nombre_completo"
-                value={values.nombre_completo}
-                onChange={handleChange}
+                value={profileData.nombre_completo}
+                onChange={handleProfileInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
@@ -75,8 +81,8 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
                 name="sobre_mi"
                 rows="5"
                 cols="33"
-                value={values.sobre_mi}
-                onChange={handleChange}
+                value={profileData.sobre_mi}
+                onChange={handleProfileInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />

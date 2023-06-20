@@ -17,11 +17,7 @@ const Perfil = ({ data }) => {
   const pageTitle = slug.split("-").join(" ").toUpperCase();
   return (
     <Layout pageName={pageTitle}>
-<<<<<<< HEAD
       <Banner banner={data} />
-=======
-      <Banner banner={data.attributes.banner} />
->>>>>>> gaby-carrizo
       <Wrapper>
         <Profile profileData={data} />
         {data.attributes.vcard != null && <Vcard vcardData={data} />}

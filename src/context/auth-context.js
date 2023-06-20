@@ -13,7 +13,7 @@ const AuthContextProvider = (props) => {
   const [profileData, setProfileData] = useState({
     nombre_completo: "",
     sobre_mi: "",
-    slug: "cristhian-v",
+    slug: "",
   });
 
   return (

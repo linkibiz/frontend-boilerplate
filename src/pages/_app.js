@@ -1,3 +1,4 @@
+import AuthContextProvider from '@/context/auth-context'
 import '@/styles/globals.css'
 import { Lato, Roboto } from 'next/font/google'
  
@@ -9,7 +10,9 @@ const roboto = Roboto({
 export default function MyApp({ Component, pageProps }) {
   return (
     <main className={roboto.className}>
-      <Component {...pageProps} />
+      <AuthContextProvider>
+        <Component {...pageProps} />
+      </AuthContextProvider>
     </main>
   )
 }

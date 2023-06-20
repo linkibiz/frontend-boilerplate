@@ -1,13 +1,19 @@
-import useForm from "../hooks/useForm";
+import { AuthContext } from "@/context/auth-context";
+import { useContext } from "react";
 import axios from "axios";
 
 const CreateUser = ({ onSubmit, initialData = {} }) => {
-  const [values, handleChange] = useForm(initialData);
+  const { userData, setUserData } = useContext(AuthContext);
+
+  const handleUserInputChange = (e) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // Create user
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, values);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, userData);
 
       if (response.status !== 200) {
         throw new Error(response.data.message);
@@ -32,8 +38,8 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
               <input
                 type="text"
                 name="username"
-                value={values.username}
-                onChange={handleChange}
+                value={userData.username}
+                onChange={handleUserInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
@@ -47,8 +53,8 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
               <input
                 type="email"
                 name="email"
-                value={values.email}
-                onChange={handleChange}
+                value={userData.email}
+                onChange={handleUserInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
@@ -62,8 +68,23 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
               <input
                 type="password"
                 name="password"
-                value={values.password}
-                onChange={handleChange}
+                value={userData.password}
+                onChange={handleUserInputChange}
+                required
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+          <div className="mt-4">
+            <label htmlFor="password_confirmation" className="block text-sm font-medium text-white">
+              Confirmar Contraseña
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="password"
+                name="password_confirmation"
+                value={userData.password_confirmation}
+                onChange={handleUserInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
