@@ -29,14 +29,15 @@ const SocialLinks = ({ socialLinks }) => {
       url: linkedin,
       icon: <LinkedinIcon />,
     },
+    
   ];
   return (
     <>
       <h2 className="font-bold">Redes sociales</h2>
-      <ul className="flex gap-5 flex-wrap w-full justify-center">
+      <ul className="flex gap-5 flex-wrap w-full justify-between">
         {socialMediaPlatforms.map(({ platform, url, icon }) =>
           url ? (
-            <li className="bg-gray-200 rounded-full p-4 flex justify-center items-center" key={platform}>
+            <li className="bg-[#1e478c] rounded-full p-4 flex justify-center items-center" key={platform}>
               <Link className="h-6 w-6" href={url}>{icon}</Link>
             </li>
           ) : null

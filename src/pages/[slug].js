@@ -17,7 +17,11 @@ const Perfil = ({ data }) => {
   const pageTitle = slug.split("-").join(" ").toUpperCase();
   return (
     <Layout pageName={pageTitle}>
+<<<<<<< HEAD
       <Banner banner={data} />
+=======
+      <Banner banner={data.attributes.banner} />
+>>>>>>> gaby-carrizo
       <Wrapper>
         <Profile profileData={data} />
         {data.attributes.vcard != null && <Vcard vcardData={data} />}
@@ -26,6 +30,7 @@ const Perfil = ({ data }) => {
         {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
         {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
       </Wrapper>
+      
       {/* <Footer/> */}
     </Layout>
   );

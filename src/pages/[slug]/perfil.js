@@ -17,9 +17,9 @@ const Perfil = ({ data }) => {
   const pageTitle = slug.split(".").join(" ").toUpperCase();
   return (
     <Layout pageName={pageTitle}>
-      {/* <Banner banner={data} /> */}
+      <Banner banner={data.attributes.banner} />
       <Wrapper>
-        {/* <Profile profileData={data} /> */}
+        <Profile profileData={data} />
         {data.attributes.vcard != null && <Vcard vcardData={data} />}
         {data.attributes.sobre_mi != "" && <About info={data} />}
         {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data} />}

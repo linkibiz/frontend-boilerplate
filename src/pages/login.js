@@ -35,7 +35,7 @@ const Login = () => {
   };
 
   return (
-    <Layout pageName="Sign up">
+    <Layout pageName="Log in">
       <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
         <div className=" w-[200px]">
           <Link href="/">
