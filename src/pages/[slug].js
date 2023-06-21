@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 import Links from "@/components/Links";
 import Profile from "@/components/Profile";
+import QrImage from "@/components/QrImage";
 import SocialLinks from "@/components/SocialLinks";
 import Vcard from "@/components/Vcard";
 import Wrapper from "@/components/Wrapper";
@@ -17,10 +18,13 @@ const Perfil = ({ data }) => {
   const pageTitle = slug.split("-").join(" ").toUpperCase();
   return (
     <Layout pageName={pageTitle}>
-      <Banner banner={data} />
+      <Banner banner={data}/>
       <Wrapper>
         <Profile profileData={data} />
-        {data.attributes.vcard != null && <Vcard vcardData={data} />}
+        <div className="flex w-full">
+          {data.attributes.vcard != null && <Vcard vcardData={data} />}
+          <QrImage value={slug} />
+        </div>
         {data.attributes.sobre_mi != "" && <About info={data} />}
         {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data} />}
         {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}

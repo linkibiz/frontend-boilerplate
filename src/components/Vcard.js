@@ -32,7 +32,7 @@ const Vcard = ({ vcardData }) => {
   };
 
   return (
-    <button className="font-bold rounded-md border bg-black text-white p-3 w-full" onClick={() => downloadVCard(CreateVCard())}>
+    <button className="tracking-[0.07em] text-sm font-bold rounded-md border bg-black text-white p-3 w-full" onClick={() => downloadVCard(CreateVCard())}>
       + Guardar contacto
     </button>
   );
