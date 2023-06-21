@@ -1,37 +1,51 @@
-import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import Layout from "@/components/Layout";
 import Logo from "../../public/images/linki-logo.png";
 import Image from "next/image";
 import Link from "next/link";
+import { setToken } from "@/utils/helpers";
+import { useAuthContext } from "@/context/auth-context";
+import { API } from "@/utils/constant";
+import { useRouter } from "next/router";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {userData, setUserData } = useAuthContext();
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [error, setError] = useState("");
+
+  const handleUserInputChange = (e) => {
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${API}/auth/local`, userData)
 
-    const userData = {
-      email,
-      password,
-    };
-    // try {
-    //   const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, userData);
+      const data = response.data;
+      if (data?.error) {
+        throw data?.error;
+      } else {
+        // set the token
+        setToken(data.jwt);
 
-    //   if (response.status !== 200) {
-    //     throw new Error(response.data.message);
-    //   }
+        // set the user
+        setUserData(data.user);
+        const url = data.user.slug
 
-    //   console.log("User created:", response.data);
-
-    //   setName("");
-    //   setEmail("");
-    //   setPassword("");
-    // } catch (error) {
-    //   console.error("Error creating user:", error.message);
-    // }
+        router.push(`/${url}/perfil`);
+      }
+    } catch (error) {
+      console.error(error);
+      setError(error?.message ?? "Something went wrong!");
+    } finally {
+      setIsLoading(false);
+    }
+    
   };
 
   return (
@@ -51,9 +65,9 @@ const Login = () => {
               <div className="flex flex-col items-start">
                 <input
                   type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="identifier"
+                  value={userData.identifier}
+                  onChange={handleUserInputChange}
                   className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
               </div>
@@ -66,8 +80,8 @@ const Login = () => {
                 <input
                   type="password"
                   name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={userData.password}
+                  onChange={handleUserInputChange}
                   className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
               </div>

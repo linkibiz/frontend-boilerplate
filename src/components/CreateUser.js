@@ -1,9 +1,12 @@
-import { AuthContext } from "@/context/auth-context";
-import { useContext } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useAuthContext } from "@/context/auth-context";
+import { setToken } from "@/utils/helpers";
 
 const CreateUser = ({ onSubmit, initialData = {} }) => {
-  const { userData, setUserData } = useContext(AuthContext);
+  const { userData, setUserData } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleUserInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -11,17 +14,49 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setIsLoading(true);
     try {
-      // Create user
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, userData);
+      const data = response.data;
+      if (data?.error) {
+        throw data?.error;
+      } else {
+        // Generate slug
+        const slug = data.user.nombre_completo.toLowerCase().replace(/\s+/g, "-");
+        const slugID = `${slug}-${data.user.id}`;
 
-      if (response.status !== 200) {
-        throw new Error(response.data.message);
+        // set the token
+        setToken(data.jwt);
+
+        // set the user
+        setUserData(data.user);
+
+        // Update the user with the generated slug
+        const updateResponse = await axios.put(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${data.user.id}`,
+          {
+            slug: slugID,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${data.jwt}`,
+            },
+          }
+        );
+
+        if (updateResponse?.error) {
+          throw updateResponse?.error;
+        }
+
+        // Here, we assume onSubmit is defined to do something with the user ID and slug.
+        onSubmit(data.user.id, slugID);
       }
-
-      onSubmit(response.data.user.id);
     } catch (error) {
-      console.error("Error creating user:", error.message);
+      console.error(error);
+      setError(error?.message ?? "Something went wrong!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,6 +66,21 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
       <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
         <form onSubmit={handleSubmit}>
           <div>
+            <label htmlFor="nombre_completo" className="block text-sm font-medium text-white">
+              Nombre Completo:
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="nombre_completo"
+                value={userData.nombre_completo}
+                onChange={handleUserInputChange}
+                required
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+          <div className="mt-4">
             <label htmlFor="name" className="block text-sm font-medium text-white">
               Usuario
             </label>

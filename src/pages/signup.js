@@ -16,15 +16,14 @@ const SignUp = () => {
 
   const [profileID, setProfileID] = useState();
   const [slug, setSlug] = useState();
-
-  const handleUserSubmit = (userId) => {
+  const handleUserSubmit = (userId,slug) => {
     setUserId(userId);
+    setSlug(slug);
     handleNext();
   };
 
-  const handleProfileSubmit = (profileID, slug) => {
+  const handleProfileSubmit = (profileID) => {
     setProfileID(profileID);
-    setSlug(slug);
     handleNext();
   };
 
@@ -47,7 +46,7 @@ const SignUp = () => {
           </div>
         </div>
         {activeStep === 0 && <CreateUser initialData={userData} onSubmit={handleUserSubmit} />}
-        {activeStep === 1 && <CreateProfile initialData={profileData} onSubmit={handleProfileSubmit} userId={userId} />}
+        {activeStep === 1 && <CreateProfile initialData={profileData} onSubmit={handleProfileSubmit} userId={userId} slug={slug}/>}
         {activeStep === 2 && <CreateAvatar  onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />}
       </>
     </Layout>

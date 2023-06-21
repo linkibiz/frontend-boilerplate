@@ -3,13 +3,13 @@ import useForm from "../hooks/useForm";
 import axios from "axios";
 import { AuthContext } from "@/context/auth-context";
 
-const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
-  const {  profileData, setProfileData } = useContext(AuthContext);
-  
+const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
+  const { profileData, setProfileData, userData } = useContext(AuthContext);
+  console.log("userData", userData)
   const handleProfileInputChange = (e) => {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
   };
-  
+
   const [socialLinks, setSocialLinks] = useState({
     facebook: "",
     linkedin: "",
@@ -25,12 +25,13 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
     e.preventDefault();
     try {
       // Generate slug
-      const slug = profileData.nombre_completo.toLowerCase().replace(/\s+/g, "-");
+      // const slug = profileData.nombre_completo.toLowerCase().replace(/\s+/g, "-");
       // Create profile with user relation
       const profileDataWithRelation = {
         ...profileData,
         user: userId,
-        slug: `${slug}-${userId}`,
+        slug,
+        nombre_completo: userData.nombre_completo,
         redes_sociales: {
           facebook: `https://www.facebook.com/${socialLinks.facebook}`,
           linkedin: `https://www.linkedin.com/in/${socialLinks.linkedin}`,
@@ -57,21 +58,6 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId }) => {
     <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
       <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="nombre_completo" className="block text-sm font-medium text-white">
-              Nombre Completo:
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="nombre_completo"
-                value={profileData.nombre_completo}
-                onChange={handleProfileInputChange}
-                required
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-          </div>
           <div className="mt-4">
             <label htmlFor="sobre_mi" className="block text-sm font-medium text-white">
               Sobre Mí:
