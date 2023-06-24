@@ -12,7 +12,8 @@ const AuthProvider = ({ children }) => {
     password_confirmation: "",
     identifier: "",
     slug: "",
-    nombre_completo: ""
+    nombre_completo: "",
+    id: null
   });
 
   const [profileData, setProfileData] = useState({
@@ -30,13 +31,13 @@ const AuthProvider = ({ children }) => {
       });
 
       const data = response.data;
-      console.log(data);
 
       setUserData({
         username: data.username,
         email: data.email,
         slug: data.slug,
-        nombre_completo: data.nombre_completo
+        nombre_completo: data.nombre_completo,
+        id: data.id
         // if the password fields are returned you can add them here,
         // typically for security reasons password is not returned in APIs
       });

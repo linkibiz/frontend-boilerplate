@@ -37,7 +37,7 @@ const Login = () => {
         setUserData(data.user);
         const url = data.user.slug
 
-        router.push(`/${url}/perfil`);
+        router.push(`/${url}`);
       }
     } catch (error) {
       console.error(error);
