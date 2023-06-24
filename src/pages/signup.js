@@ -11,19 +11,19 @@ import CreateProfile from "@/components/CreateProfile";
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [userId, setUserId] = useState()
-  const { userData, profileData } = useContext(AuthContext); // use AuthContext
+  const { userData } = useContext(AuthContext); // use AuthContext
  
 
   const [profileID, setProfileID] = useState();
   const [slug, setSlug] = useState();
-  const handleUserSubmit = (userId,slug) => {
+  const handleUserSubmit = (userId) => {
     setUserId(userId);
-    setSlug(slug);
     handleNext();
   };
 
-  const handleProfileSubmit = (profileID) => {
+  const handleProfileSubmit = (profileID,slug) => {
     setProfileID(profileID);
+    setSlug(slug)
     handleNext();
   };
 
@@ -46,7 +46,7 @@ const SignUp = () => {
           </div>
         </div>
         {activeStep === 0 && <CreateUser initialData={userData} onSubmit={handleUserSubmit} />}
-        {activeStep === 1 && <CreateProfile initialData={profileData} onSubmit={handleProfileSubmit} userId={userId} slug={slug}/>}
+        {activeStep === 1 && <CreateProfile initialData={userData} onSubmit={handleProfileSubmit} userId={userId}/>}
         {activeStep === 2 && <CreateAvatar  onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />}
       </>
     </Layout>

@@ -4,6 +4,7 @@ import { API, BEARER } from "@/utils/constant";
 import { useEffect } from "react";
 import { getToken } from "@/utils/helpers";
 import axios from "axios";
+
 const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState({
     username: "",
@@ -13,16 +14,22 @@ const AuthProvider = ({ children }) => {
     identifier: "",
     slug: "",
     nombre_completo: "",
-    id: null
-  });
-
-  const [profileData, setProfileData] = useState({
+    id: null,
     sobre_mi: "",
+    ocupacion: "",
+    socialLinks: {
+      facebook: "",
+      linkedin: "",
+      twitter: "",
+      instagram: "",
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const authToken = getToken();
+
   const fetchLoggedInUser = async (token) => {
     setIsLoading(true);
     try {
@@ -31,21 +38,24 @@ const AuthProvider = ({ children }) => {
       });
 
       const data = response.data;
-
       setUserData({
         username: data.username,
         email: data.email,
         slug: data.slug,
         nombre_completo: data.nombre_completo,
-        id: data.id
-        // if the password fields are returned you can add them here,
-        // typically for security reasons password is not returned in APIs
+        id: data.id,
+        sobre_mi: "",
+        ocupacion: "",
+        socialLinks: {
+          facebook: "",
+          linkedin: "",
+          twitter: "",
+          instagram: "",
+        },
       });
-
-     
     } catch (error) {
       console.error(error);
-      console.error("Error While Getting Logged In User Details");
+      setError("Error While Getting Logged In User Details");
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +67,7 @@ const AuthProvider = ({ children }) => {
     }
   }, [authToken]);
 
-  return <AuthContext.Provider value={{ userData, setUserData, profileData, setProfileData, isLoading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ userData, setUserData, isLoading, error }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

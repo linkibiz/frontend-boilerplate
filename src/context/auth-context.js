@@ -2,8 +2,8 @@ import { createContext, useContext, useState } from "react";
 
 // Create initial context object
 export const AuthContext = createContext({
-  user: undefined,
   isLoading: false,
+  error: null,
   userData: {
     username: "",
     email: "",
@@ -11,20 +11,26 @@ export const AuthContext = createContext({
     password: "",
     password_confirmation: "",
     slug: "",
-    nombre_completo: ""
-  },
-  profileData: {
+    nombre_completo: "",
     sobre_mi: "",
+    ocupacion: "",
+    socialLinks: {
+      facebook: "",
+      linkedin: "",
+      twitter: "",
+      instagram: "",
+    }
   },
   setUserData: () => {},
-  setProfileData: () => {},
 });
 
 // Create a hook for easy usage of the context
 export const useAuthContext = () => useContext(AuthContext);
+
 // Create a context provider component
 export const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -32,18 +38,27 @@ export const AuthContextProvider = ({ children }) => {
     password_confirmation: "",
     identifier: "",
     slug: "",
-    nombre_completo: ""
-  });
-
-  const [profileData, setProfileData] = useState({
+    nombre_completo: "",
     sobre_mi: "",
+    ocupacion: "",
+    socialLinks: {
+      facebook: "",
+      linkedin: "",
+      twitter: "",
+      instagram: "",
+    }
   });
 
-  return (
-    <AuthContext.Provider value={{ user, isLoading, setUser, userData, setUserData, profileData, setProfileData }}>
-      { children }
-    </AuthContext.Provider>
-  );
+  const contextValue = {
+    isLoading,
+    setIsLoading,
+    error,
+    setError,
+    userData,
+    setUserData,
+  };
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContextProvider;

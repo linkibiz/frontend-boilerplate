@@ -23,8 +23,7 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
         throw data?.error;
       } else {
         // Generate slug
-        const slug = data.user.nombre_completo.toLowerCase().replace(/\s+/g, "-");
-        const slugID = `${slug}-${data.user.id}`;
+
 
         // set the token
         setToken(data.jwt);
@@ -32,25 +31,9 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
         // set the user
         setUserData(data.user);
 
-        // Update the user with the generated slug
-        const updateResponse = await axios.put(
-          `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${data.user.id}`,
-          {
-            slug: slugID,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${data.jwt}`,
-            },
-          }
-        );
-
-        if (updateResponse?.error) {
-          throw updateResponse?.error;
-        }
 
         // Here, we assume onSubmit is defined to do something with the user ID and slug.
-        onSubmit(data.user.id, slugID);
+        onSubmit(data.user.id);
       }
     } catch (error) {
       console.error(error);
