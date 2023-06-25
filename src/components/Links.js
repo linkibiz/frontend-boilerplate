@@ -1,9 +1,10 @@
 import Link from "next/link";
 import React, { useState } from "react";
 const Links = ({ linksList }) => {
+  console.log(linksList)
   return (
     <>
-      {linksList.length > 0 && (
+      {/* {linksList.length > 0 && (
         <div className="flex flex-col gap-3 w-full items-left">
           <p className="font-bold">Links</p>
           {linksList.map((link) => (
@@ -19,7 +20,7 @@ const Links = ({ linksList }) => {
             </>
           ))}
         </div>
-      )}
+      )} */}
     </>
   );
 };
