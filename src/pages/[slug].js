@@ -19,7 +19,7 @@ const Perfil = ({ data }) => {
   let pageTitle = slug.split("-").slice(0, -1).join(" ");
   return (
     <Layout pageName={pageTitle}>
-      <Banner banner={data} />
+      <Banner banner={data.attributes.banner}  />
       <Wrapper>
         <Profile profileData={data} />
         <div className="flex w-full">
