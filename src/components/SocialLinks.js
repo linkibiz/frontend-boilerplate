@@ -8,33 +8,33 @@ import TwitterIcon from "./Icons/TwitterIcon";
 
 const SocialLinks = ({ socialLinks }) => {
   console.log(socialLinks)
-  // const { facebook, instagram, linkedin, twitter  } = socialLinks;
-  // const socialMediaPlatforms = [
-  //   {
-  //     platform: "facebook",
-  //     url: facebook,
-  //     icon: <FacebookIcon />,
-  //   },
-  //   {
-  //     platform: "instagram",
-  //     url: instagram,
-  //     icon: <InstagramIcon />,
-  //   },
-  //   {
-  //     platform: "twitter",
-  //     url: twitter,
-  //     icon: <TwitterIcon />,
-  //   },
-  //   {
-  //     platform: "linkedin",
-  //     url: linkedin,
-  //     icon: <LinkedinIcon />,
-  //   },
+  const { facebook, instagram, linkedin, twitter  } = socialLinks;
+  const socialMediaPlatforms = [
+    {
+      platform: "facebook",
+      url: facebook,
+      icon: <FacebookIcon />,
+    },
+    {
+      platform: "instagram",
+      url: instagram,
+      icon: <InstagramIcon />,
+    },
+    {
+      platform: "twitter",
+      url: twitter,
+      icon: <TwitterIcon />,
+    },
+    {
+      platform: "linkedin",
+      url: linkedin,
+      icon: <LinkedinIcon />,
+    },
     
-  // ];
+  ];
   return (
     <>
-      {/* <h2 className="font-bold">Redes sociales</h2>
+      <h2 className="font-bold">Redes sociales</h2>
       <ul className="flex gap-5 flex-wrap w-full justify-between">
         {socialMediaPlatforms.map(({ platform, url, icon }) =>
           url ? (
@@ -43,7 +43,7 @@ const SocialLinks = ({ socialLinks }) => {
             </li>
           ) : null
         )}
-      </ul> */}
+      </ul>
     </>
   );
 };

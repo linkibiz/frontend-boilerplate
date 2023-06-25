@@ -19,19 +19,19 @@ const Perfil = ({ data }) => {
   let pageTitle = slug.split("-").slice(0, -1).join(" ");
   return (
     <Layout pageName={pageTitle}>
-      <Banner banner={data.attributes.banner}  />
+      <Banner banner={data.attributes.banner} />
       <Wrapper>
         <Profile profileData={data} />
         <div className="flex w-full">
           {data.attributes.vcard != null && <Vcard vcardData={data} />}
           <QrImage value={slug} />
         </div>
-        {data.attributes.sobre_mi != "" && <About info={data} />}
+        {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
         {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data} />}
-        {data.attributes.links.length > 0 && <Links linksList={data.links} />}
-        {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.redes_sociales} />}
+        {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
+        {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
       </Wrapper>
-
+      
       {/* <Footer/> */}
     </Layout>
   );
