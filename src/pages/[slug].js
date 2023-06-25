@@ -40,11 +40,12 @@ const Perfil = ({ data }) => {
 export default Perfil;
 
 export async function getServerSideProps({ query: { slug } }) {
-  const url = `${process.env.NEXT_PUBLIC_STRAPI_URL}/users?slug=${slug}&populate=deep`;
+  const url = `${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${slug}?populate=deep`;
   console.log(url)
   const req = await fetch(url);
   const res = await req.json();
-  const data = res[0];
+  const data = res;
+  console.log(data)
   return {
     props: {
       data,
