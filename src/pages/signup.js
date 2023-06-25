@@ -22,6 +22,7 @@ const SignUp = () => {
   };
 
   const handleProfileSubmit = (profileID,slug) => {
+    console.log(profileID, slug)
     setProfileID(profileID);
     setSlug(slug)
     handleNext();
@@ -45,8 +46,8 @@ const SignUp = () => {
             </Link>
           </div>
         </div>
-        {activeStep === 0 && <CreateUser initialData={userData} onSubmit={handleUserSubmit} />}
-        {activeStep === 1 && <CreateProfile initialData={userData} onSubmit={handleProfileSubmit} userId={userId}/>}
+        {activeStep === 0 && <CreateUser  onSubmit={handleUserSubmit} />}
+        {activeStep === 1 && <CreateProfile onSubmit={handleProfileSubmit} userId={userId}/>}
         {activeStep === 2 && <CreateAvatar  onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />}
       </>
     </Layout>

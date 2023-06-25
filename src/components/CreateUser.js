@@ -22,18 +22,13 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
       if (data?.error) {
         throw data?.error;
       } else {
-        // Generate slug
+        const slug = data.user.username;
 
-
-        // set the token
         setToken(data.jwt);
 
-        // set the user
         setUserData(data.user);
 
-
-        // Here, we assume onSubmit is defined to do something with the user ID and slug.
-        onSubmit(data.user.id);
+        onSubmit(data.user.id, slug);
       }
     } catch (error) {
       console.error(error);

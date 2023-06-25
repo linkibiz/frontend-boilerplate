@@ -16,9 +16,8 @@ const Perfil = ({ data }) => {
   const router = useRouter();
   const { slug } = router.query;
   console.log(data);
-  let pageTitle = slug.split("-").slice(0, -1).join(" ");
   return (
-    <Layout pageName={pageTitle}>
+    <Layout pageName={slug}>
       <Banner banner={data.attributes.banner} />
       <Wrapper>
         <Profile profileData={data} />

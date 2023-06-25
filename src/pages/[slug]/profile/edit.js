@@ -1,6 +1,6 @@
 import withAuth from "@/components/withAuth";
 import Layout from "@/components/Layout";
-import Logo from "../../../../public/images/linki-logo.png"
+import Logo from "../../../../public/images/linki-logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthContext } from "@/context/auth-context";
@@ -10,55 +10,58 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { API } from "@/utils/constant";
 const ProfileEdit = () => {
+  const [profileID, setProfileID] = useState();
   const [loading, setLoading] = useState(false);
   const { userData, setUserData } = useAuthContext();
   const [error, setError] = useState("");
   const router = useRouter();
   const { slug } = router.query;
-
-  useEffect(() => {
-    // Fetch the user's profile data when the component mounts
-    if (slug) {
-      getUserProfile(slug);
-    }
-  }, [slug]);
-
   const handleUserInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
-  const getUserProfile = async (slug) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API}/profiles/${slug}`);
-      const data = response.data;
-      console.log(data)
-      setUserData(data);
-    } catch (error) {
-      console.error(error);
-      setError("Error while fetching profile data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`${API}/users/${userData.id}?populate=deep`);
+        setProfileID(response.data.profile.id);
+      } catch (error) {
+        console.error(`Error fetching user: ${error.message}`);
+      }
+    };
 
+    if (userData.id) {
+      fetchUser();
+    }
+  }, [userData.id]);
+
+  console.log("user", profileID);
   const handleProfileUpdate = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.put(`${API}/users/${userData.id}`, userData, {
+      // Get the current state of the resource
+      const getResponse = await axios.get(`${API}/profiles/${profileID}`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
+      const currentData = getResponse.data.data;
+      console.log(currentData)
+      // Merge the current state with the updates
+      const updatedData = { ...currentData.attributes, ...userData };
+      console.log(updatedData)
+      // // Make the PUT request
+      // const putResponse = await axios.put(`${API}/profiles/${profileID}`, {data: updatedData}, {
+      //   headers: {
+      //     Authorization: `Bearer ${getToken()}`,
+      //   },
+      // });
 
-      const data = response.data;
-      if (data?.error) {
-        throw data?.error;
-      } else {
-        setUserData(data);
-        router.push(`/${slug}`);
-      }
+      // const data = putResponse.data;
+      // console.log(data)
+      // setUserData(data);
+      // router.push(`/${slug}`);
     } catch (error) {
       console.error(error);
       setError("Error while updating profile data");
@@ -85,7 +88,7 @@ const ProfileEdit = () => {
                 <input
                   type="text"
                   name="nombre_completo"
-                  value={userData.nombre_completo}
+                  value={userData?.nombre_completo}
                   onChange={handleUserInputChange}
                   className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />

@@ -3,7 +3,7 @@ import useForm from "../hooks/useForm";
 import axios from "axios";
 import { AuthContext } from "@/context/auth-context";
 import { getToken } from "@/utils/helpers";
-const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
+const CreateProfile = ({ onSubmit, userId }) => {
   const { userData, setUserData } = useContext(AuthContext);
   console.log("userData", userData);
   const authToken = getToken();
@@ -26,6 +26,8 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
     try {
       const updatedUserData = {
         ...userData,
+        user: userId,
+        slug: userData.username,
         redes_sociales: {
           facebook: `https://www.facebook.com/${userData.socialLinks.facebook}`,
           linkedin: `https://www.linkedin.com/in/${userData.socialLinks.linkedin}`,
@@ -34,11 +36,7 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
         },
       };
 
-      const response = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_URL}/users/${userData.id}`, updatedUserData, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });
 
       if (response.status !== 200) {
         throw new Error(response.data.message);
@@ -46,8 +44,8 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
 
       // Updating the userData in the context
       setUserData(updatedUserData);
-      console.log(response.data)
-      onSubmit(response.data.id, response.data.slug);
+      console.log(response.data.data.attributes.slug);
+      onSubmit(response.data.data.id, response.data.data.attributes.slug);
     } catch (error) {
       console.error("Error updating user data:", error.message);
     }
@@ -78,7 +76,7 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
               Ocupacion
             </label>
             <div className="flex flex-col items-start">
-            <input
+              <input
                 type="text"
                 name="ocupacion"
                 value={userData.ocupacion}
@@ -97,7 +95,7 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
               <input
                 type="text"
                 name="facebook"
-                value={userData.socialLinks?.facebook || ''}
+                value={userData.socialLinks?.facebook || ""}
                 onChange={handleSocialLinksInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -110,7 +108,7 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
               <input
                 type="text"
                 name="instagram"
-                value={userData.socialLinks?.instagram || ''}
+                value={userData.socialLinks?.instagram || ""}
                 onChange={handleSocialLinksInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -123,7 +121,7 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
               <input
                 type="text"
                 name="twitter"
-                value={userData.socialLinks?.twitter || ''}
+                value={userData.socialLinks?.twitter || ""}
                 onChange={handleSocialLinksInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -136,7 +134,7 @@ const CreateProfile = ({ onSubmit, initialData = {}, userId, slug }) => {
               <input
                 type="text"
                 name="linkedin"
-                value={userData.socialLinks?.linkedin || ''}
+                value={userData.socialLinks?.linkedin || ""}
                 onChange={handleSocialLinksInputChange}
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"

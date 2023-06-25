@@ -27,6 +27,7 @@ const Login = () => {
       const response = await axios.post(`${API}/auth/local`, userData)
 
       const data = response.data;
+      console.log(data)
       if (data?.error) {
         throw data?.error;
       } else {
@@ -35,9 +36,8 @@ const Login = () => {
 
         // set the user
         setUserData(data.user);
-        const url = data.user.slug
-
-        router.push(`/${url}`);
+        const url = data.user.username
+        router.push(`/${url}/profile/edit`);
       }
     } catch (error) {
       console.error(error);
