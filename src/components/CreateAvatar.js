@@ -18,7 +18,7 @@ const CreateAvatar = ({ onSubmit, perfilId, slug }) => {
     try {
       const formData = new FormData();
       formData.append("files", selectedImage);
-      formData.append("ref", "plugin::users-permissions.user"); // La entidad a la que se asocia la imagen
+      formData.append("ref", "api::profile.profile"); // La entidad a la que se asocia la imagen
       formData.append("refId", perfilId); // The user ID to associate the image with
       formData.append("field", "avatar");
       const response = await axios.post("http://localhost:1337/api/upload", formData);

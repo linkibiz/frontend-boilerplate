@@ -23,13 +23,13 @@ const Perfil = ({ data }) => {
       <Wrapper>
         <Profile profileData={data} />
         <div className="flex w-full">
-          {data.vcard != null && <Vcard vcardData={data} />}
+          {data.attributes.vcard != null && <Vcard vcardData={data} />}
           <QrImage value={slug} />
         </div>
-        {data.sobre_mi != "" && <About info={data} />}
-        {data.botones.length > 0 && <ContactButtons contactButtons={data} />}
-        {data.links.length > 0 && <Links linksList={data.links} />}
-        {data.redes_sociales != null && <SocialLinks socialLinks={data.redes_sociales} />}
+        {data.attributes.sobre_mi != "" && <About info={data} />}
+        {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data} />}
+        {data.attributes.links.length > 0 && <Links linksList={data.links} />}
+        {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.redes_sociales} />}
       </Wrapper>
 
       {/* <Footer/> */}
