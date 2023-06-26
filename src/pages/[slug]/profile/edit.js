@@ -206,4 +206,4 @@ const ProfileEdit = () => {
   );
 };
 
-export default ProfileEdit;
+export default withAuth(ProfileEdit);

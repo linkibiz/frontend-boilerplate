@@ -1,16 +1,18 @@
 import { useAuthContext } from "@/context/auth-context";
+import { getToken } from "@/utils/helpers";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 const withAuth = (WrappedComponent) => {
   const Wrapper = (props) => {
-    const { userData, isLoading } = useAuthContext();
+    const token = getToken()
+    const { userData } = useAuthContext();
     const router = useRouter();
-    console.log(userData, isLoading)
+    console.log(userData)
     useEffect(() => {
-      if (!userData && !isLoading) {
+      if (!token) {
         router.replace("/login");
       }
-    }, [userData, router,isLoading]);
+    }, [userData]);
 
     return <WrappedComponent {...props} />;
   };
