@@ -20,10 +20,22 @@ const ProfileEdit = () => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
+  const handleSocialLinksInputChange = (e) => {
+    setUserData({
+      ...userData,
+      redes_sociales: {
+        ...userData.redes_sociales,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${API}/users/${userData.id}?populate=deep`);
+        console.log(response.data)
         setProfileID(response.data.profile.id);
       } catch (error) {
         console.error(`Error fetching user: ${error.message}`);
@@ -35,33 +47,32 @@ const ProfileEdit = () => {
     }
   }, [userData.id]);
 
-  console.log("user", profileID);
+  console.log(userData)
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       // Get the current state of the resource
-      const getResponse = await axios.get(`${API}/profiles/${profileID}`, {
+      const getResponse = await axios.get(`${API}/profiles/${profileID}?populate=deep`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      const currentData = getResponse.data.data;
-      console.log(currentData)
+      const currentData = getResponse.data.data.attributes;
+      console.log("current", currentData)
       // Merge the current state with the updates
-      const updatedData = { ...currentData.attributes, ...userData };
-      console.log(updatedData)
-      // // Make the PUT request
-      // const putResponse = await axios.put(`${API}/profiles/${profileID}`, {data: updatedData}, {
-      //   headers: {
-      //     Authorization: `Bearer ${getToken()}`,
-      //   },
-      // });
+      const updatedData = { ...currentData, ...userData };
+      console.log("updated", updatedData)
+      // Make the PUT request
+      const putResponse = await axios.put(`${API}/profiles/${profileID}`, {data: updatedData}, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
 
-      // const data = putResponse.data;
-      // console.log(data)
-      // setUserData(data);
-      // router.push(`/${slug}`);
+      const data = putResponse.data;
+      setUserData(data);
+      router.push(`/${slug}`);
     } catch (error) {
       console.error(error);
       setError("Error while updating profile data");
@@ -94,6 +105,92 @@ const ProfileEdit = () => {
                 />
               </div>
             </div>
+            <div className="mt-4">
+            <label htmlFor="sobre_mi" className="block text-sm font-medium text-white">
+              Sobre Mí:
+            </label>
+            <div className="flex flex-col items-start">
+              <textarea
+                name="sobre_mi"
+                rows="5"
+                cols="33"
+                value={userData.sobre_mi}
+                onChange={handleUserInputChange}
+                
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+          <div className="mt-4">
+            <label htmlFor="ocupacion" className="block text-sm font-medium text-white">
+              Ocupacion
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="ocupacion"
+                value={userData.ocupacion}
+                onChange={handleUserInputChange}
+                
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+          <div className="mt-4">
+            <h3 className=" text-white my-3 font-bold">Redes sociales</h3>
+            <label htmlFor="facebook" className="block text-sm font-medium text-white">
+              Facebook
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="facebook"
+                value={userData.redes_sociales?.facebook || ""}
+                onChange={handleSocialLinksInputChange}
+                
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+            <label htmlFor="facebook" className="block text-sm font-medium text-white">
+              Instagram
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="instagram"
+                value={userData.redes_sociales?.instagram || ""}
+                onChange={handleSocialLinksInputChange}
+                
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+            <label htmlFor="twitter" className="block text-sm font-medium text-white">
+              Twitter
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="twitter"
+                value={userData.redes_sociales?.twitter || ""}
+                onChange={handleSocialLinksInputChange}
+                
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+            <label htmlFor="linkedin" className="block text-sm font-medium text-white">
+              Linkedin
+            </label>
+            <div className="flex flex-col items-start">
+              <input
+                type="text"
+                name="linkedin"
+                value={userData.redes_sociales?.linkedin || ""}
+                onChange={handleSocialLinksInputChange}
+                
+                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
             <div className="flex items-center justify-end mt-4 flex-col gap-3">
               <button
                 type="submit"

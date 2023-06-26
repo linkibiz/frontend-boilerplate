@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 const Profile = ({ profileData }) => {
   const {
     nombre_completo,
-    description,
+    ocupacion,
     avatar
   } = profileData.attributes;
 
@@ -27,7 +27,7 @@ const Profile = ({ profileData }) => {
           />
           <div className="text-black w-full px-4 flex flex-col items-center gap-y-3.5">
             <h1 className="font-bold text-3xl text-center">{nombre_completo}</h1>
-            <p className="text-xs tracking-wider font-bold">{description}</p>
+            <p className="text-xs tracking-wider font-bold">{ocupacion}</p>
           </div>
         </div>
       </div>

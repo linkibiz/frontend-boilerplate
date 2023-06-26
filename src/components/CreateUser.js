@@ -23,7 +23,7 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
         throw data?.error;
       } else {
         const slug = data.user.username;
-
+        console.log(slug)
         setToken(data.jwt);
 
         setUserData(data.user);

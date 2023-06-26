@@ -14,8 +14,8 @@ const CreateProfile = ({ onSubmit, userId }) => {
   const handleSocialLinksInputChange = (e) => {
     setUserData({
       ...userData,
-      socialLinks: {
-        ...userData.socialLinks,
+      redes_sociales: {
+        ...userData.redes_sociales,
         [e.target.name]: e.target.value,
       },
     });
@@ -29,10 +29,10 @@ const CreateProfile = ({ onSubmit, userId }) => {
         user: userId,
         slug: userData.username,
         redes_sociales: {
-          facebook: `https://www.facebook.com/${userData.socialLinks.facebook}`,
-          linkedin: `https://www.linkedin.com/in/${userData.socialLinks.linkedin}`,
-          twitter: `twitter.com/${userData.socialLinks.twitter}`,
-          instagram: `https://www.instagram.com/${userData.socialLinks.instagram}`,
+          facebook: userData.redes_sociales.facebook,
+          linkedin: userData.redes_sociales.linkedin,
+          twitter: userData.redes_sociales.twitter,
+          instagram: userData.redes_sociales.instagram,
         },
       };
 
@@ -66,7 +66,6 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 cols="33"
                 value={userData.sobre_mi}
                 onChange={handleProfileInputChange}
-                required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
@@ -81,7 +80,6 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 name="ocupacion"
                 value={userData.ocupacion}
                 onChange={handleProfileInputChange}
-                required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
@@ -95,9 +93,8 @@ const CreateProfile = ({ onSubmit, userId }) => {
               <input
                 type="text"
                 name="facebook"
-                value={userData.socialLinks?.facebook || ""}
+                value={userData.redes_sociales?.facebook || ""}
                 onChange={handleSocialLinksInputChange}
-                required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
@@ -108,9 +105,8 @@ const CreateProfile = ({ onSubmit, userId }) => {
               <input
                 type="text"
                 name="instagram"
-                value={userData.socialLinks?.instagram || ""}
+                value={userData.redes_sociales?.instagram || ""}
                 onChange={handleSocialLinksInputChange}
-                required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
@@ -121,9 +117,8 @@ const CreateProfile = ({ onSubmit, userId }) => {
               <input
                 type="text"
                 name="twitter"
-                value={userData.socialLinks?.twitter || ""}
+                value={userData.redes_sociales?.twitter || ""}
                 onChange={handleSocialLinksInputChange}
-                required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>
@@ -134,9 +129,8 @@ const CreateProfile = ({ onSubmit, userId }) => {
               <input
                 type="text"
                 name="linkedin"
-                value={userData.socialLinks?.linkedin || ""}
+                value={userData.redes_sociales?.linkedin || ""}
                 onChange={handleSocialLinksInputChange}
-                required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </div>

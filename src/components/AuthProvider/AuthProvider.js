@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
     id: null,
     sobre_mi: "",
     ocupacion: "",
-    socialLinks: {
+    redes_sociales: {
       facebook: "",
       linkedin: "",
       twitter: "",
@@ -33,24 +33,34 @@ const AuthProvider = ({ children }) => {
   const fetchLoggedInUser = async (token) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API}/users/me`, {
+      const response = await axios.get(`${API}/users/me?populate=deep`, {
         headers: { Authorization: `${BEARER} ${token}` },
       });
 
       const data = response.data;
+      const profile = response.data.profile
+      console.log("profile", profile)
       setUserData({
         username: data.username,
         email: data.email,
-        slug: data.slug,
+        slug: data.username,
         nombre_completo: data.nombre_completo,
         id: data.id,
-        sobre_mi: "",
-        ocupacion: "",
-        socialLinks: {
-          facebook: "",
-          linkedin: "",
-          twitter: "",
-          instagram: "",
+        sobre_mi: profile?.sobre_mi || '',
+        ocupacion: profile?.ocupacion || '',
+        avatar: {
+          ...profile?.avatar,
+          url: profile?.avatar.url
+        },
+        // banner: {
+        //   ...profile?.banner,
+        //   url: profile?.banner.url
+        // },
+        redes_sociales: {
+          facebook: profile?.redes_sociales.facebook || '',
+          linkedin: profile?.redes_sociales.linkedin || '',
+          twitter: profile?.redes_sociales.twitter || '',
+          instagram: profile?.redes_sociales.instagram || '',
         },
       });
     } catch (error) {
