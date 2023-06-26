@@ -38,8 +38,8 @@ const AuthProvider = ({ children }) => {
       });
 
       const data = response.data;
-      const profile = response.data.profile
-      console.log("profile", profile)
+      const profile = response.data.user
+      console.log("profile", data)
       setUserData({
         username: data.username,
         email: data.email,

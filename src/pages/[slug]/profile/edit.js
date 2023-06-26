@@ -9,6 +9,8 @@ import { getToken } from "@/utils/helpers";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { API } from "@/utils/constant";
+
+
 const ProfileEdit = () => {
   const [profileID, setProfileID] = useState();
   const [loading, setLoading] = useState(false);
@@ -16,6 +18,7 @@ const ProfileEdit = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   const { slug } = router.query;
+  console.log(slug)
   const handleUserInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -34,9 +37,12 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${API}/users/${userData.id}?populate=deep`);
-        console.log(response.data)
-        setProfileID(response.data.profile.id);
+        const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`);
+        console.log({
+          "fetch ID": response.data.data[0].id,
+          "userData ID": userData.id
+        })
+        setProfileID(response.data.data[0].id);
       } catch (error) {
         console.error(`Error fetching user: ${error.message}`);
       }
@@ -207,3 +213,6 @@ const ProfileEdit = () => {
 };
 
 export default withAuth(ProfileEdit);
+
+
+
