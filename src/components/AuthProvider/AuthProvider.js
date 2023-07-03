@@ -39,13 +39,12 @@ const AuthProvider = ({ children }) => {
 
       const data = response.data;
       const profile = response.data.user
-      console.log("profile", data)
       setUserData({
         username: data.username,
         email: data.email,
         slug: data.username,
-        nombre_completo: data.nombre_completo,
         id: data.id,
+        nombre_completo: profile?.nombre_completo,
         sobre_mi: profile?.sobre_mi || '',
         ocupacion: profile?.ocupacion || '',
         avatar: {
@@ -77,7 +76,7 @@ const AuthProvider = ({ children }) => {
     }
   }, [authToken]);
 
-  return <AuthContext.Provider value={{ userData, setUserData, isLoading, error }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ userData, setUserData, isLoading, setIsLoading, error }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
