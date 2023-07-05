@@ -4,6 +4,7 @@ import Image from "next/image";
 
 const ContactButtons = ({ contactButtons }) => {
   const buttons = contactButtons?.attributes.botones || [];
+  console.log(buttons)
   return (
     <>
       {buttons.length > 0 && (

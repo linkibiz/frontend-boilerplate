@@ -19,7 +19,13 @@ export const AuthContext = createContext({
       linkedin: "",
       twitter: "",
       instagram: "",
-    }
+    },
+    links: [
+      {
+        titulo: '',
+        url: ''
+      }
+    ]
   },
   setUserData: () => {},
 });
@@ -46,7 +52,13 @@ export const AuthContextProvider = ({ children }) => {
       linkedin: "",
       twitter: "",
       instagram: "",
-    }
+    },
+    links: [
+      {
+        titulo: '',
+        url: ''
+      }
+    ]
   });
 
   const contextValue = {

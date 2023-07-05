@@ -23,6 +23,12 @@ const AuthProvider = ({ children }) => {
       twitter: "",
       instagram: "",
     },
+    links: [
+      {
+        titulo: '',
+        url: ''
+      }
+    ]
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,29 +44,30 @@ const AuthProvider = ({ children }) => {
       });
 
       const data = response.data;
-      const profile = response.data.user
+      const profile = response.data.user;
       setUserData({
         username: data.username,
         email: data.email,
         slug: data.username,
         id: data.id,
         nombre_completo: profile?.nombre_completo,
-        sobre_mi: profile?.sobre_mi || '',
-        ocupacion: profile?.ocupacion || '',
+        sobre_mi: profile?.sobre_mi || "",
+        ocupacion: profile?.ocupacion || "",
         avatar: {
           ...profile?.avatar,
-          url: profile?.avatar.url
+          url: profile?.avatar.url,
         },
         // banner: {
         //   ...profile?.banner,
         //   url: profile?.banner.url
         // },
         redes_sociales: {
-          facebook: profile?.redes_sociales.facebook || '',
-          linkedin: profile?.redes_sociales.linkedin || '',
-          twitter: profile?.redes_sociales.twitter || '',
-          instagram: profile?.redes_sociales.instagram || '',
+          facebook: profile?.redes_sociales.facebook || "",
+          linkedin: profile?.redes_sociales.linkedin || "",
+          twitter: profile?.redes_sociales.twitter || "",
+          instagram: profile?.redes_sociales.instagram || "",
         },
+        links: profile?.links || [],
       });
     } catch (error) {
       console.error(error);

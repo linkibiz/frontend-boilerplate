@@ -29,19 +29,34 @@ const ProfileEdit = () => {
         ...userData.redes_sociales,
         [e.target.name]: e.target.value,
       },
+      links: [{}],
     });
   };
+
+  const handleLinksInputChange = (e, index) => {
+    const { name, value } = e.target;
+
+    const linksList = [...userData.links];
+    linksList[index][name] = value;
+
+    setUserData({
+      ...userData,
+      links: linksList,
+    });
+  };
+
+  console.log("LINKS", userData.links)
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        console.log("loading1", isLoading)
+        console.log("loading1", isLoading);
         const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`);
         if (response.data.data[0].id !== userData.id) {
           router.push(`/${userData.username}`);
         } else {
-          console.log("loading2", isLoading)
+          console.log("loading2", isLoading);
           setProfileID(response.data.data[0].id);
           setLoading(false);
         }
@@ -144,6 +159,36 @@ const ProfileEdit = () => {
                   />
                 </div>
               </div>
+              {userData.links.map((link, index) => (
+                <div key={index}>
+                  <div className="mt-4">
+                    <label htmlFor={`link-name-${index}`} className="block text-sm font-medium text-white">
+                      Link Name
+                    </label>
+                    <input
+                      type="text"
+                      id={`link-name-${index}`}
+                      name="name"
+                      value={link.titulo}
+                      onChange={(e) => handleLinksInputChange(e, index)}
+                      className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label htmlFor={`link-url-${index}`} className="block text-sm font-medium text-white">
+                      Link URL
+                    </label>
+                    <input
+                      type="text"
+                      id={`link-url-${index}`}
+                      name="url"
+                      value={link.url}
+                      onChange={(e) => handleLinksInputChange(e, index)}
+                      className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    />
+                  </div>
+                </div>
+              ))}
               <div className="mt-4">
                 <h3 className=" text-white my-3 font-bold">Redes sociales</h3>
                 <label htmlFor="facebook" className="block text-sm font-medium text-white">

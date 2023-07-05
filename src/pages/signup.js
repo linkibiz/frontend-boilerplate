@@ -22,7 +22,6 @@ const SignUp = () => {
   };
 
   const handleProfileSubmit = (profileID,slug) => {
-    console.log(profileID, slug)
     setProfileID(profileID);
     setSlug(slug)
     handleNext();
