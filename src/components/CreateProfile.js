@@ -1,23 +1,96 @@
 import { useContext, useState } from "react";
-import useForm from "../hooks/useForm";
 import axios from "axios";
 import { AuthContext } from "@/context/auth-context";
-import { getToken } from "@/utils/helpers";
+import FacebookIcon from "./Icons/FacebookIcon";
+import InstagramIcon from "./Icons/InstagramIcon";
+import TwitterIcon from "./Icons/TwitterIcon";
+import WebsiteIcon from "./Icons/WebsiteIcon";
+import TikTokIcon from "./Icons/TikTokIcon";
+import YoutubeIcon from "./Icons/YoutubeIcon";
+import WhatsAppIcon from "./Icons/WhatsAppIcon";
+import Email from "./Icons/Email";
+import LinkedinIcon from "./Icons/LinkedinIcon";
+import IconsModal from "./IconsModal";
+import ContactIcon from "./Icons/ContactIcon";
+import ContactModal from "./ContactModal";
+import LinksIcon from "./Icons/LinksIcon";
+import LinksModal from "./LinksModal";
 const CreateProfile = ({ onSubmit, userId }) => {
   const { userData, setUserData } = useContext(AuthContext);
-  console.log("userData", userData);
-  const authToken = getToken();
+  const [socialMediaModalOpen, setSocialMediaModalOpen] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [linksModalOpen, setLinksModalOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [links, setLinks] = useState([]);
+
+
+  const socialMediaPlatforms = [
+    {
+      name: "facebook",
+      icon: <FacebookIcon />,
+    },
+    {
+      name: "instagram",
+      icon: <InstagramIcon />,
+    },
+    {
+      name: "twitter",
+      icon: <TwitterIcon />,
+    },
+    {
+      name: "website",
+      icon: <WebsiteIcon />,
+    },
+    {
+      name: "tiktok",
+      icon: <TikTokIcon />,
+    },
+    {
+      name: "youtube",
+      icon: <YoutubeIcon />,
+    },
+    {
+      name: "whatsapp",
+      icon: <WhatsAppIcon />,
+    },
+    {
+      name: "email",
+      icon: <Email />,
+    },
+    {
+      name: "linkedin",
+      icon: <LinkedinIcon />,
+    },
+  ];
+
   const handleProfileInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
-  console.log(userData);
+
+  const handleContactCardInputChange = (e) => {
+    setUserData({
+      ...userData,
+      vcard: {
+        ...userData.vcard,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
   const handleSocialLinksInputChange = (e) => {
     setUserData({
       ...userData,
       redes_sociales: {
-        ...userData.redes_sociales,
-        [e.target.name]: e.target.value,
+        ...(userData.redes_sociales || {}),
+        [selectedPlatform.name]: e.target.value,
       },
+    });
+  };
+
+  const handleLinksInputChange = (newLinks) => {
+    setUserData({
+      ...userData,
+      links: newLinks
     });
   };
 
@@ -26,14 +99,26 @@ const CreateProfile = ({ onSubmit, userId }) => {
     try {
       const updatedUserData = {
         ...userData,
-        user: userId,
+        profile: userId,
         slug: userData.username,
+        ocupacion: userData.vcard.ocupacion,
         redes_sociales: {
           facebook: userData.redes_sociales.facebook,
           linkedin: userData.redes_sociales.linkedin,
           twitter: userData.redes_sociales.twitter,
           instagram: userData.redes_sociales.instagram,
         },
+        vcard: {
+          nombre: userData.nombre_completo.split(" ")[0],
+          apellido: userData.nombre_completo.split(" ")[1],
+          email: userData.email,
+          ocupacion: userData.vcard.ocupacion,
+          celular: userData.vcard.celular,
+          telefono_casa: userData.vcard.telefono_casa,
+          telefono_trabajo: userData.vcard.telefono_trabajo,
+          email_trabajo: userData.vcard.email_trabajo,
+        },
+        links: userData.links,
       };
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });
@@ -44,7 +129,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
 
       // Updating the userData in the context
       setUserData(updatedUserData);
-      console.log(response.data.data.attributes.slug);
+      console.log(response.data.data.attributes.slug, response.data.data.id);
       onSubmit(response.data.data.id, response.data.data.attributes.slug);
     } catch (error) {
       console.error("Error updating user data:", error.message);
@@ -52,8 +137,8 @@ const CreateProfile = ({ onSubmit, userId }) => {
   };
 
   return (
-    <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
-      <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
+    <div className=" bg-black flex flex-col items-center min-h-screen pt-4 sm:justify-center sm:pt-0">
+      <div className="w-full px-6 py-4 overflow-hidden sm:max-w-md sm:rounded-lg">
         <form onSubmit={handleSubmit}>
           <div className="mt-4">
             <label htmlFor="sobre_mi" className="block text-sm font-medium text-white">
@@ -66,81 +151,92 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 cols="33"
                 value={userData.sobre_mi}
                 onChange={handleProfileInputChange}
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
               />
             </div>
           </div>
           <div className="mt-4">
-            <label htmlFor="ocupacion" className="block text-sm font-medium text-white">
-              Ocupacion
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="ocupacion"
-                value={userData.ocupacion}
-                onChange={handleProfileInputChange}
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
+            <h3 className=" text-white my-3 font-bold">Información de contacto</h3>
+            <div
+              className="h-[64px] bg-[#1c1a20] rounded-2xl p-3 flex items-center gap-5"
+              onClick={() => {
+                setContactModalOpen(true);
+              }}
+            >
+              <div>
+                <ContactIcon />
+              </div>
+              <div>
+                <h3 className="text-white">Tarjeta de contacto</h3>
+              </div>
             </div>
+            {contactModalOpen && (
+              <ContactModal
+                isOpen={contactModalOpen}
+                closeContactModal={() => setContactModalOpen(false)}
+                userData={userData}
+                handleProfileInputChange={handleContactCardInputChange}
+              />
+            )}
+          </div>
+          <div className="mt-4">
+            <div
+              className="h-[64px] bg-[#1c1a20] rounded-2xl p-3 flex items-center gap-5"
+              onClick={() => {
+                setLinksModalOpen(true);
+              }}
+            >
+              <div>
+                <LinksIcon />
+              </div>
+              <div>
+                <h3 className="text-white">Links</h3>
+              </div>
+            </div>
+            {linksModalOpen && (
+              <LinksModal
+                isOpen={linksModalOpen}
+                closeContactModal={() => setLinksModalOpen(false)}
+                userData={userData}
+                handleLinksInputChange={handleLinksInputChange}
+                initialLinks={links}
+              />
+            )}
           </div>
           <div className="mt-4">
             <h3 className=" text-white my-3 font-bold">Redes sociales</h3>
-            <label htmlFor="facebook" className="block text-sm font-medium text-white">
-              Facebook
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="facebook"
-                value={userData.redes_sociales?.facebook || ""}
-                onChange={handleSocialLinksInputChange}
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-            <label htmlFor="facebook" className="block text-sm font-medium text-white">
-              Instagram
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="instagram"
-                value={userData.redes_sociales?.instagram || ""}
-                onChange={handleSocialLinksInputChange}
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-            <label htmlFor="twitter" className="block text-sm font-medium text-white">
-              Twitter
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="twitter"
-                value={userData.redes_sociales?.twitter || ""}
-                onChange={handleSocialLinksInputChange}
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-            <label htmlFor="linkedin" className="block text-sm font-medium text-white">
-              Linkedin
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="linkedin"
-                value={userData.redes_sociales?.linkedin || ""}
-                onChange={handleSocialLinksInputChange}
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
+            <div className="flex flex-wrap gap-3 justify-between">
+              {socialMediaPlatforms.map((platform) => (
+                <div
+                  className="w-[64px]"
+                  key={platform.name}
+                  onClick={() => {
+                    setSelectedPlatform(platform);
+                    setSocialMediaModalOpen(true);
+                  }}
+                >
+                  {platform.icon}
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex items-center justify-end mt-4 flex-col gap-3">
+          {selectedPlatform && (
+            <IconsModal
+              isOpen={socialMediaModalOpen}
+              closeModal={() => setSocialMediaModalOpen(false)}
+              selectedPlatform={selectedPlatform}
+              icon={selectedPlatform.icon}
+              userData={userData}
+              handleSocialLinksInputChange={handleSocialLinksInputChange}
+            />
+          )}
+
+          <div className="flex items-center justify-end mt-8 flex-col gap-3">
             <button
               type="submit"
-              className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-900 border border-transparent rounded-md active:bg-gray-900"
+              className="w-full mx-auto inline-flex items-center justify-center  py-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-[#5F2BF8] border border-transparent rounded-md active:bg-gray-900"
             >
-              Next
+              Siguiente
             </button>
           </div>
         </form>

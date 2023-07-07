@@ -19,13 +19,24 @@ export const AuthContext = createContext({
       linkedin: "",
       twitter: "",
       instagram: "",
+      website: "",
+      tiktok: "",
+      youtube: "",
+      whatsapp: "",
+      email: "",
     },
-    links: [
-      {
-        titulo: '',
-        url: ''
-      }
-    ]
+    links: [],
+    vcard: {
+      nombre: "",
+      apellido: "",
+      ocupacion: "",
+      email: "",
+      celular: "",
+      website: "",
+      telefono_casa: "",
+      telefono_trabajo: "",
+      email_trabajo: "",
+    },
   },
   setUserData: () => {},
 });
@@ -34,7 +45,7 @@ export const AuthContext = createContext({
 export const useAuthContext = () => useContext(AuthContext);
 
 // Create a context provider component
-export const AuthContextProvider = ({ children }) => {
+const AuthContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState({
@@ -52,13 +63,24 @@ export const AuthContextProvider = ({ children }) => {
       linkedin: "",
       twitter: "",
       instagram: "",
+      website: "",
+      tiktok: "",
+      youtube: "",
+      whatsapp: "",
+      email: "",
     },
-    links: [
-      {
-        titulo: '',
-        url: ''
-      }
-    ]
+    links: [],
+    vcard: {
+      nombre: "",
+      apellido: "",
+      ocupacion: "",
+      email: "",
+      celular: "",
+      website: "",
+      telefono_casa: "",
+      telefono_trabajo: "",
+      email_trabajo: "",
+    },
   });
 
   const contextValue = {

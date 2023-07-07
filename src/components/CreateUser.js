@@ -45,7 +45,7 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
         <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="nombre_completo" className="block text-sm font-medium text-white">
-              Nombre Completo:
+              Nombre y Apellido:
             </label>
             <div className="flex flex-col items-start">
               <input

@@ -15,7 +15,6 @@ import React from "react";
 const Perfil = ({ data }) => {
   const router = useRouter();
   const { slug } = router.query;
-  console.log(data);
   return (
     <Layout pageName={slug}>
       <Banner banner={data.attributes.banner} />
@@ -25,10 +24,10 @@ const Perfil = ({ data }) => {
           {data.attributes.vcard != null && <Vcard vcardData={data} />}
           <QrImage value={slug} />
         </div>
-        {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
-        {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data} />}
-        {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
         {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
+        {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
+        {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data.attributes.botones} />}
+        {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
       </Wrapper>
       
       {/* <Footer/> */}

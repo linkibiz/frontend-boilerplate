@@ -1,0 +1,98 @@
+import React, { useState, useEffect } from "react";
+import { Transition } from "react-transition-group";
+
+const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initialLinks }) => {
+  const [links, setLinks] = useState([]);
+
+  useEffect(() => {
+    setLinks(initialLinks);
+  }, [initialLinks]);
+
+  const handleChange = (index, field, e) => {
+    const newLinks = [...links];
+    newLinks[index][field] = e.target.value;
+    setLinks(newLinks);
+  };
+
+  const addLink = () => {
+    const newLinks = [...links, { titulo: "", url: "" }];
+    setLinks(newLinks);
+  };
+  
+
+  const removeLink = (index) => {
+    const newLinks = [...links];
+    newLinks.splice(index, 1);
+    setLinks(newLinks);
+  };
+
+  const saveLinks = () => {
+    handleLinksInputChange(links);
+    closeContactModal();
+  };
+  return (
+    <Transition in={isOpen} timeout={400} unmountOnExit>
+      {(state) => (
+        <div
+          className={`fixed top-0 left-0 w-full h-full flex items-center justify-center transition-opacity duration-200 ${
+            state === "entering" || state === "entered" ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        >
+          <div className="relative w-full max-w-[325px]">
+            <span
+              onClick={closeContactModal}
+              className="absolute top-0 left-0 h-3 w-3 p-4 text-[10px] font-bold flex justify-center items-center rounded-full bg-white m-3"
+            >
+              X
+            </span>
+            <div className="bg-black rounded-lg p-10">
+              <div className="mb-4 flex gap-4 justify-between items-center flex-col">
+                <h2 className="text-white capitalize ">Links</h2>
+              </div>
+              {links.map((link, index) => (
+                <div key={index}>
+                  <label htmlFor={`link-title-${index}`} className="block text-sm font-medium text-white">
+                    Título:
+                  </label>
+                  <input
+                    id={`link-title-${index}`}
+                    name={`link-title-${index}`}
+                    type="text"
+                    value={link.titulo}
+                    onChange={(e) => handleChange(index, "titulo", e)}
+                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
+                  />
+                  <label htmlFor={`link-url-${index}`} className="block text-sm font-medium text-white">
+                    URL:
+                  </label>
+                  <input
+                    id={`link-url-${index}`}
+                    name={`link-url-${index}`}
+                    type="text"
+                    value={link.url}
+                    onChange={(e) => handleChange(index, "url", e)}
+                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
+                  />
+                  <button className="bg-white text-black"  type="button" onClick={() => removeLink(index)}>
+                    Remove link
+                  </button>
+                </div>
+              ))}
+              {links.length < 3 && (
+                <button type="button" className="bg-white text-black" onClick={addLink}>
+                  Add link
+                </button>
+              )}
+              <div onClick={saveLinks} className="mt-4 bg-[#5F2BF8] text-white px-4 py-2 rounded w-full">
+                Guardar
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </Transition>
+  );
+};
+
+export default LinksModal;

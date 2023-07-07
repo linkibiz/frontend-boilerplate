@@ -22,13 +22,25 @@ const AuthProvider = ({ children }) => {
       linkedin: "",
       twitter: "",
       instagram: "",
+      website: "",
+      tiktok: "",
+      youtube: "",
+      whatsapp: "",
+      email: ""
     },
     links: [
-      {
-        titulo: '',
-        url: ''
-      }
-    ]
+    ],
+    vcard: {
+      nombre: "",
+      apellido: "",
+      ocupacion: "",
+      email: "",
+      celular: "",
+      website: "",
+      telefono_casa: "",
+      telefono_trabajo: "",
+      email_trabajo: "",
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +62,7 @@ const AuthProvider = ({ children }) => {
         email: data.email,
         slug: data.username,
         id: data.id,
-        nombre_completo: profile?.nombre_completo,
+        nombre_completo: data?.nombre_completo,
         sobre_mi: profile?.sobre_mi || "",
         ocupacion: profile?.ocupacion || "",
         avatar: {
@@ -66,8 +78,24 @@ const AuthProvider = ({ children }) => {
           linkedin: profile?.redes_sociales.linkedin || "",
           twitter: profile?.redes_sociales.twitter || "",
           instagram: profile?.redes_sociales.instagram || "",
+          website: profile?.redes_sociales.website || "",
+          tiktok: profile?.redes_sociales.tiktok || "",
+          youtube: profile?.redes_sociales.youtube || "",
+          whatsapp: profile?.redes_sociales.whatsapp || "",
+          email: profile?.redes_sociales.email || ""
         },
         links: profile?.links || [],
+        vcard: {
+          nombre: "",
+          apellido: "",
+          ocupacion: "",
+          email: "",
+          celular: "",
+          website: "",
+          telefono_casa: "",
+          telefono_trabajo: "",
+          email_trabajo: ""
+        }
       });
     } catch (error) {
       console.error(error);

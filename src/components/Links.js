@@ -12,7 +12,7 @@ const Links = ({ linksList }) => {
               <Link
                 href={link.url}
                 target={link.target}
-                className="w-full p-3 font-bold w-4/5 text-center bg-[#000000] rounded-md text-white"
+                className="w-full p-3 font-bold w-4/5 text-center bg-[#000000] rounded-3xl text-white"
                 key={link.id}
               >
                 {link.titulo}

@@ -7,6 +7,7 @@ import Link from "next/link";
 import CreateUser from "@/components/CreateUser";
 import CreateAvatar from "@/components/CreateAvatar";
 import CreateProfile from "@/components/CreateProfile";
+import WelcomeScreen from "@/components/WelcomeScreen";
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -39,15 +40,16 @@ const SignUp = () => {
     <Layout pageName="Sign up">
       <>
         <div className=" bg-black flex flex-col items-center pt-6 sm:justify-center sm:pt-0">
-          <div className=" w-[200px]">
+          <div className=" w-[125px]">
             <Link href="/">
               <Image src={Logo} />
             </Link>
           </div>
         </div>
-        {activeStep === 0 && <CreateUser  onSubmit={handleUserSubmit} />}
-        {activeStep === 1 && <CreateProfile onSubmit={handleProfileSubmit} userId={userId}/>}
-        {activeStep === 2 && <CreateAvatar  onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />}
+        {activeStep === 0 && <WelcomeScreen  onSubmit={handleUserSubmit} />}
+        {activeStep === 1 && <CreateUser  onSubmit={handleUserSubmit} />}
+        {activeStep === 2 && <CreateProfile onSubmit={handleProfileSubmit} userId={userId}/>}
+        {activeStep === 3 && <CreateAvatar  onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />}
       </>
     </Layout>
   );
