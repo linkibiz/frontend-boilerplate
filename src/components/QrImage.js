@@ -4,6 +4,7 @@ import QRCode from "qrcode.react";
 const QrImage = ({ value }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const url = `http://localhost:3000/${value}`
+  console.log(value)
   const openModal = () => {
     setIsModalOpen(true);
   };
