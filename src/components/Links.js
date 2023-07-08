@@ -15,10 +15,8 @@ const Links = ({ linksList }) => {
                 className="w-full tracking-[0.2em] py-[10px] px-[20px] font-bold text-left bg-[#272727] rounded-xl text-white uppercase text-xs flex items-center justify-between"
                 key={link.id}
               >
-                {link.titulo}
-                <div className=" h-4">
-                  <RightArrowIcon />
-                </div>
+                <h3 className=" text-left grow">{link.titulo}</h3>
+                <div className=" h-4">{">"}</div>
               </Link>
             </>
           ))}

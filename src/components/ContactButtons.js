@@ -47,11 +47,11 @@ const ContactButtons = ({ contactButtons }) => {
         return dataItem ? (
           <div className="w-full bg-[#0a0a0a] p-[10px] rounded-lg">
             <Link href={ref} className="text-orange-500" target="blank">
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-5 justify-start">
                 <div className="h-5">{icon}</div>
                 <div className="text-sm">{dataItem.titulo_de_boton}</div>
-                <div className="h-3 absolute right-[10%]">
-                  <RightArrowIcon />
+                <div className="absolute right-[10%]">
+                  {">"}
                 </div>
               </div>
             </Link>
