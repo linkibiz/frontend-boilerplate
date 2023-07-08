@@ -12,26 +12,28 @@ import Vcard from "@/components/Vcard";
 import Wrapper from "@/components/Wrapper";
 import { useRouter } from "next/router";
 import React from "react";
-
+import LoadingComponent from "@/components/LoadingComponent";
 const Perfil = ({ data }) => {
   const router = useRouter();
   const { slug } = router.query;
   return (
     <Layout pageName={slug}>
       {/* <Banner banner={data.attributes.banner} /> */}
-      <Wrapper>
-        <Navbar/>
-        <Profile profileData={data} />
-        <div className="flex w-full gap-5">
-          <QrImage value={slug} />
-          {data.attributes.vcard != null && <Vcard vcardData={data} />}
-        </div>
-        {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
-        {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
-        {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data.attributes.botones} />}
-        {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
-      </Wrapper>
-      
+      <LoadingComponent>
+        <Wrapper>
+          <Navbar />
+          <Profile profileData={data} />
+          <div className="flex w-full gap-5">
+            <QrImage value={slug} />
+            {data.attributes.vcard != null && <Vcard vcardData={data} />}
+          </div>
+          {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
+          {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
+          {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data.attributes.botones} />}
+          {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
+        </Wrapper>
+      </LoadingComponent>
+
       {/* <Footer/> */}
     </Layout>
   );

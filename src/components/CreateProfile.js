@@ -7,15 +7,14 @@ import TwitterIcon from "./Icons/TwitterIcon";
 import WebsiteIcon from "./Icons/WebsiteIcon";
 import TikTokIcon from "./Icons/TikTokIcon";
 import YoutubeIcon from "./Icons/YoutubeIcon";
-import WhatsAppIcon from "./Icons/WhatsAppIcon";
-import Email from "./Icons/Email";
+
 import LinkedinIcon from "./Icons/LinkedinIcon";
 import IconsModal from "./IconsModal";
 import ContactIcon from "./Icons/ContactIcon";
 import ContactModal from "./ContactModal";
 import LinksIcon from "./Icons/LinksIcon";
 import LinksModal from "./LinksModal";
-const CreateProfile = ({ onSubmit, userId }) => {
+const CreateProfile = ({ onSubmit, userId }) => { 
   const { userData, setUserData } = useContext(AuthContext);
   const [socialMediaModalOpen, setSocialMediaModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);

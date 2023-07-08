@@ -1,4 +1,4 @@
-import { useContext,useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth-context";
 import Layout from "@/components/Layout";
 import Logo from "../../public/images/linki-logo.png";
@@ -8,12 +8,12 @@ import CreateUser from "@/components/CreateUser";
 import CreateAvatar from "@/components/CreateAvatar";
 import CreateProfile from "@/components/CreateProfile";
 import WelcomeScreen from "@/components/WelcomeScreen";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [userId, setUserId] = useState()
+  const [userId, setUserId] = useState();
   const { userData } = useContext(AuthContext); // use AuthContext
- 
 
   const [profileID, setProfileID] = useState();
   const [slug, setSlug] = useState();
@@ -22,9 +22,9 @@ const SignUp = () => {
     handleNext();
   };
 
-  const handleProfileSubmit = (profileID,slug) => {
+  const handleProfileSubmit = (profileID, slug) => {
     setProfileID(profileID);
-    setSlug(slug)
+    setSlug(slug);
     handleNext();
   };
 
@@ -34,6 +34,21 @@ const SignUp = () => {
 
   const handleImageSubmit = () => {
     handleNext();
+  };
+
+  const renderStep = () => {
+    switch (activeStep) {
+      case 0:
+        return <WelcomeScreen onSubmit={handleUserSubmit} />;
+      case 1:
+        return <CreateUser onSubmit={handleUserSubmit} />;
+      case 2:
+        return <CreateProfile onSubmit={handleProfileSubmit} userId={userId} />;
+      case 3:
+        return <CreateAvatar onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />;
+      default:
+        return <div />;
+    }
   };
 
   return (
@@ -46,10 +61,11 @@ const SignUp = () => {
             </Link>
           </div>
         </div>
-        {activeStep === 0 && <WelcomeScreen  onSubmit={handleUserSubmit} />}
-        {activeStep === 1 && <CreateUser  onSubmit={handleUserSubmit} />}
-        {activeStep === 2 && <CreateProfile onSubmit={handleProfileSubmit} userId={userId}/>}
-        {activeStep === 3 && <CreateAvatar  onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />}
+        <TransitionGroup>
+          <CSSTransition key={activeStep} timeout={500} classNames="fade">
+            {renderStep()}
+          </CSSTransition>
+        </TransitionGroup>
       </>
     </Layout>
   );
