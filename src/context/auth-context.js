@@ -26,6 +26,7 @@ export const AuthContext = createContext({
       email: "",
     },
     links: [],
+    botones: [],
     vcard: {
       nombre: "",
       apellido: "",
@@ -70,6 +71,7 @@ const AuthContextProvider = ({ children }) => {
       email: "",
     },
     links: [],
+    botones: [],
     vcard: {
       nombre: "",
       apellido: "",

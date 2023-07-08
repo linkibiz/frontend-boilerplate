@@ -10,7 +10,7 @@ import CreateProfile from "@/components/CreateProfile";
 import WelcomeScreen from "@/components/WelcomeScreen";
 
 const SignUp = () => {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [userId, setUserId] = useState()
   const { userData } = useContext(AuthContext); // use AuthContext
  

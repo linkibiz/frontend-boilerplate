@@ -5,7 +5,6 @@ const CreateAvatar = ({ onSubmit, perfilId, slug }) => {
   const [selectedImage, setSelectedImage] = useState();
   const [previewUrl, setPreviewUrl] = useState();
   const router = useRouter();
-  console.log(slug)
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     setSelectedImage(file);

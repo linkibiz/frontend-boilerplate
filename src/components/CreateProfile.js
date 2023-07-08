@@ -50,14 +50,6 @@ const CreateProfile = ({ onSubmit, userId }) => {
       icon: <YoutubeIcon />,
     },
     {
-      name: "whatsapp",
-      icon: <WhatsAppIcon />,
-    },
-    {
-      name: "email",
-      icon: <Email />,
-    },
-    {
       name: "linkedin",
       icon: <LinkedinIcon />,
     },
@@ -124,6 +116,20 @@ const CreateProfile = ({ onSubmit, userId }) => {
           email_trabajo: userData.vcard.email_trabajo,
         },
         links: userData.links,
+        botones: [
+          {
+            titulo_de_boton: "Whatsapp",
+            url: userData.vcard.celular
+          },
+          {
+            titulo_de_boton: "Llamar",
+            url: userData.vcard.celular
+          },
+          {
+            titulo_de_boton: "Correo",
+            url: userData.email
+          }
+        ]
       };
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });

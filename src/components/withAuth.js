@@ -7,7 +7,6 @@ const withAuth = (WrappedComponent) => {
     const token = getToken()
     const { userData } = useAuthContext();
     const router = useRouter();
-    console.log(userData)
     useEffect(() => {
       if (!token) {
         router.replace("/login");

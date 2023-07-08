@@ -17,7 +17,6 @@ const ProfileEdit = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   const { slug } = router.query;
-  console.log(slug);
   const handleUserInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -45,18 +44,15 @@ const ProfileEdit = () => {
     });
   };
 
-  console.log("LINKS", userData.links)
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        console.log("loading1", isLoading);
         const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`);
         if (response.data.data[0].id !== userData.id) {
           router.push(`/${userData.username}`);
         } else {
-          console.log("loading2", isLoading);
           setProfileID(response.data.data[0].id);
           setLoading(false);
         }

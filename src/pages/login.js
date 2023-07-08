@@ -27,7 +27,6 @@ const Login = () => {
       const response = await axios.post(`${API}/auth/local`, userData)
 
       const data = response.data;
-      console.log(data)
       if (data?.error) {
         throw data?.error;
       } else {

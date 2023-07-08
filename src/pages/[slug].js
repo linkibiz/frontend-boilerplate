@@ -4,6 +4,7 @@ import ContactButtons from "@/components/ContactButtons";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 import Links from "@/components/Links";
+import Navbar from "@/components/Navbar";
 import Profile from "@/components/Profile";
 import QrImage from "@/components/QrImage";
 import SocialLinks from "@/components/SocialLinks";
@@ -17,12 +18,13 @@ const Perfil = ({ data }) => {
   const { slug } = router.query;
   return (
     <Layout pageName={slug}>
-      <Banner banner={data.attributes.banner} />
+      {/* <Banner banner={data.attributes.banner} /> */}
       <Wrapper>
+        <Navbar/>
         <Profile profileData={data} />
-        <div className="flex w-full">
-          {data.attributes.vcard != null && <Vcard vcardData={data} />}
+        <div className="flex w-full gap-5">
           <QrImage value={slug} />
+          {data.attributes.vcard != null && <Vcard vcardData={data} />}
         </div>
         {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
         {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}

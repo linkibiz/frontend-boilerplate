@@ -5,7 +5,7 @@ import WelcomeBanner from "./WelcomeBanner";
 const WelcomeScreen = ({onSubmit}) => {
   
   return (
-    <div className="bg-black flex flex-col justify-evenly h-full">
+    <div className="bg-black flex flex-col justify-evenly h-full min-h-[100vh]">
       <div className="flex flex-col gap-10 text-center">
         <h1 className="text-white font-bold uppercase text-2xl">Linki tu nueva tarjeta de presentacion digital</h1>
       </div>

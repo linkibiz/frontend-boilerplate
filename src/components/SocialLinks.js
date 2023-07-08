@@ -26,6 +26,18 @@ const SocialLinks = ({ socialLinks }) => {
       icon: <InstagramIcon />,
     },
     {
+      platform: "tiktok",
+      url: tiktok,
+      link: "https://www.tiktok.com/@",
+      icon: <TikTokIcon />,
+    },
+    {
+      platform: "linkedin",
+      url: linkedin,
+      link: "https://www.linkedin.com/in",
+      icon: <LinkedinIcon />,
+    },
+    {
       platform: "twitter",
       url: twitter,
       link: "https://twitter.com",
@@ -38,43 +50,31 @@ const SocialLinks = ({ socialLinks }) => {
       icon: <WebsiteIcon />,
     },
     {
-      platform: "tiktok",
-      url: tiktok,
-      link: "https://www.tiktok.com/@",
-      icon: <TikTokIcon />,
-    },
-    {
       platform: "youtube",
       url: youtube,
       link: "https://www.youtube.com/@",
       icon: <YoutubeIcon />,
     },
-    {
-      platform: "whatsapp",
-      url: whatsapp,
-      link: "https://wa.me/",
-      icon: <WhatsAppIcon />,
-    },
-    {
-      platform: "email",
-      url: email,
-      link: "mailto:",
-      icon: <Email />,
-    },
-    {
-      platform: "linkedin",
-      url: linkedin,
-      link: "https://www.linkedin.com/in",
-      icon: <LinkedinIcon />,
-    },
+    // {
+    //   platform: "whatsapp",
+    //   url: whatsapp,
+    //   link: "https://wa.me/",
+    //   icon: <WhatsAppIcon />,
+    // },
+    // {
+    //   platform: "email",
+    //   url: email,
+    //   link: "mailto:",
+    //   icon: <Email />,
+    // },
   ];
   return (
     <>
-      <ul className="flex gap-5 flex-wrap w-full justify-between">
+      <ul className="w-[350px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-5 pl-4">
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
-            <li className="shadow-3xl rounded-full bg-transparent" key={platform}>
-              <Link className="h-[60px] w-[60px] block" href={`${link}/${url}`} target="_blank">
+            <li className="shadow-3xl rounded-full bg-transparent flex-auto" key={platform}>
+              <Link className="h-[54px] w-[54px] block" href={`${link}/${url}`} target="_blank">
                 {icon}
               </Link>
             </li>

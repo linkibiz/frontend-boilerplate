@@ -4,6 +4,8 @@ import Email from "./Icons/Email";
 import Phone from "./Icons/Phone";
 import Location from "./Icons/Location";
 import WebsiteIcon from "./Icons/WebsiteIcon";
+import RightArrowIcon from "./Icons/RightArrowIcon";
+import WhatsAppIcon from "./Icons/WhatsAppIcon";
 
 const contactIcons = [
   {
@@ -12,13 +14,13 @@ const contactIcons = [
     id: 1,
   },
   {
-    iconType: "Ubicación",
-    icon: <Location />,
+    iconType: "Llamar",
+    icon: <Phone />,
     id: 2,
   },
   {
-    iconType: "Llamar",
-    icon: <Phone />,
+    iconType: "Whatsapp",
+    icon: <WhatsAppIcon />,
     id: 3,
   },
   {
@@ -30,28 +32,34 @@ const contactIcons = [
 
 const ContactButtons = ({ contactButtons }) => {
   // const contactButtons = contactData.attributes.botones;
-  console.log(contactButtons)
-  // return (
-  //   <div className="flex gap-10 justify-center items-center w-full">
-  //     {contactIcons.map(({ iconType, icon, id }) => {
-  //       const dataItem = contactButtons.find((item) => item.titulo_de_boton === iconType);
-  //       const ref =
-  //         dataItem?.titulo_de_boton === "Correo"
-  //           ? `mailto:${dataItem.url}`
-  //           : dataItem?.titulo_de_boton === "Llamar"
-  //           ? `tel:${dataItem.url}`
-  //           : dataItem?.url;
-  //       return dataItem ? (
-  //         <div className="flex flex-col items-center gap-2">
-  //           <a target="_blank" className=" h-16 w-16 bg-[#222222] p-4 rounded-full" href={ref}>
-  //             {icon}
-  //           </a>
-  //           <p className="font-bold">{dataItem.titulo_de_boton}</p>
-  //         </div>
-  //       ) : null;
-  //     })}
-  //   </div>
-  // );
+  return (
+    <div className="flex w-full flex-col items-start gap-3">
+      {contactIcons.map(({ iconType, icon, id }) => {
+        const dataItem = contactButtons.find((item) => item.titulo_de_boton === iconType);
+        const ref =
+          dataItem?.titulo_de_boton === "Correo"
+            ? `mailto:${dataItem.url}`
+            : dataItem?.titulo_de_boton === "Llamar"
+            ? `tel:${dataItem.url}`
+            : dataItem?.titulo_de_boton === "Whatsapp"
+            ? `https://wa.me/${dataItem.url.split(' ').join('')}`
+            : dataItem?.url;
+        return dataItem ? (
+          <div className="w-full bg-[#0a0a0a] p-[10px] rounded-lg">
+            <Link href={ref} className="text-orange-500" target="blank">
+              <div className="flex items-center gap-5">
+                <div className="h-5">{icon}</div>
+                <div className="text-sm">{dataItem.url}</div>
+                <div className="h-3 absolute right-[10%]">
+                  <RightArrowIcon />
+                </div>
+              </div>
+            </Link>
+          </div>
+        ) : null;
+      })}
+    </div>
+  );
 };
 
 export default ContactButtons;
