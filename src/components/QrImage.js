@@ -32,7 +32,7 @@ const QrImage = ({ value }) => {
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 uppercase text-center font-bold text-">Comparte tu perfil</h3>
-                <QRCode value='https://linki.cloud/cristhian.vargas' size={256}/>
+                <QRCode value={`https://linki.cloud/${value}`} size={256}/>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
