@@ -18,11 +18,11 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleProfileInputC
           <div className="relative w-full max-w-[325px]">
             <span
               onClick={closeContactModal}
-              className="absolute top-0 left-0 h-3 w-3 p-4 text-[10px] font-bold flex justify-center items-center rounded-full bg-white m-3"
+              className="absolute top-0 right-0 h-3 w-3 p-4 text-[10px] font-bold flex justify-center items-center rounded-full bg-white m-3"
             >
               X
             </span>
-            <div className="bg-black rounded-lg p-10">
+            <div className="bg-black rounded-lg p-8">
               <div className="mb-4 flex gap-4 justify-between items-center flex-col">
                 <h2 className="text-white capitalize ">Tarjeta de contacto</h2>
               </div>
@@ -88,7 +88,7 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleProfileInputC
                 </label>
                 <div className="flex flex-col items-start">
                   <input
-                    type="number"
+                    type="email"
                     name="email_trabajo"
                     value={userData.vcard.email_trabajo}
                     onChange={handleChange}

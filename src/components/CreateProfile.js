@@ -107,6 +107,11 @@ const CreateProfile = ({ onSubmit, userId }) => {
           linkedin: userData.redes_sociales.linkedin,
           twitter: userData.redes_sociales.twitter,
           instagram: userData.redes_sociales.instagram,
+          website: userData.redes_sociales.website,
+          tiktok: userData.redes_sociales.tiktok,
+          whatsapp: userData.redes_sociales.whatsapp,
+          youtube: userData.redes_sociales.youtube,
+          email: userData.redes_sociales.email
         },
         vcard: {
           nombre: userData.nombre_completo.split(" ")[0],

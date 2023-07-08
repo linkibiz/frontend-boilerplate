@@ -42,16 +42,16 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
           <div className="relative w-full max-w-[325px]">
             <span
               onClick={closeContactModal}
-              className="absolute top-0 left-0 h-3 w-3 p-4 text-[10px] font-bold flex justify-center items-center rounded-full bg-white m-3"
+              className="absolute top-0 right-0 h-3 w-3 p-4 text-[10px] font-bold flex justify-center items-center rounded-full bg-white m-3"
             >
               X
             </span>
-            <div className="bg-black rounded-lg p-10">
+            <div className="bg-black rounded-lg p-4 flex flex-col gap-5">
               <div className="mb-4 flex gap-4 justify-between items-center flex-col">
                 <h2 className="text-white capitalize ">Links</h2>
               </div>
               {links.map((link, index) => (
-                <div key={index}>
+                <div key={index} className="relative flex flex-col gap-1">
                   <label htmlFor={`link-title-${index}`} className="block text-sm font-medium text-white">
                     Título:
                   </label>
@@ -74,17 +74,17 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
                     onChange={(e) => handleChange(index, "url", e)}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
-                  <button className="bg-white text-black"  type="button" onClick={() => removeLink(index)}>
-                    Remove link
+                  <button className=" text-red-600  absolute top-0 right-0"  type="button" onClick={() => removeLink(index)}>
+                    Quitar link
                   </button>
                 </div>
               ))}
               {links.length < 3 && (
-                <button type="button" className="bg-white text-black" onClick={addLink}>
-                  Add link
+                <button type="button" className="mt-4 bg-transparent border border-white text-white px-4 py-2 rounded w-full" onClick={addLink}>
+                  Agregar link
                 </button>
               )}
-              <div onClick={saveLinks} className="mt-4 bg-[#5F2BF8] text-white px-4 py-2 rounded w-full">
+              <div onClick={saveLinks} className="text-center mt-4 bg-[#5F2BF8] text-white px-4 py-2 rounded w-full">
                 Guardar
               </div>
             </div>
