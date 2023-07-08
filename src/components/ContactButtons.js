@@ -48,8 +48,8 @@ const ContactButtons = ({ contactButtons }) => {
           <div className="w-full bg-[#0a0a0a] p-[10px] rounded-lg">
             <Link href={ref} className="text-orange-500" target="blank">
               <div className="flex items-center gap-5 justify-start">
-                <div className="h-5">{icon}</div>
-                <div className="text-sm">{dataItem.titulo_de_boton}</div>
+                <div className="h-5 grow-0">{icon}</div>
+                <div className="text-sm grow">{dataItem.titulo_de_boton}</div>
                 <div className="absolute right-[10%]">
                   {">"}
                 </div>
