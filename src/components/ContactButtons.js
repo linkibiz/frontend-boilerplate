@@ -49,7 +49,7 @@ const ContactButtons = ({ contactButtons }) => {
             <Link href={ref} className="text-orange-500" target="blank">
               <div className="flex items-center gap-5">
                 <div className="h-5">{icon}</div>
-                <div className="text-sm">{dataItem.url}</div>
+                <div className="text-sm">{dataItem.titulo_de_boton}</div>
                 <div className="h-3 absolute right-[10%]">
                   <RightArrowIcon />
                 </div>

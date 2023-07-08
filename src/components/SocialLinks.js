@@ -9,9 +9,10 @@ import TikTokIcon from "./Icons/TikTokIcon";
 import YoutubeIcon from "./Icons/YoutubeIcon";
 import WhatsAppIcon from "./Icons/WhatsAppIcon";
 import Email from "./Icons/Email";
+import { PinterestIcon } from "./Icons/PinterestIcon";
 
 const SocialLinks = ({ socialLinks }) => {
-  const { facebook, instagram, linkedin, twitter, website, tiktok, youtube, whatsapp, email } = socialLinks;
+  const { pinterest,facebook, instagram, linkedin, twitter, website, tiktok, youtube, whatsapp, email } = socialLinks;
   const socialMediaPlatforms = [
     {
       platform: "facebook",
@@ -55,12 +56,12 @@ const SocialLinks = ({ socialLinks }) => {
       link: "https://www.youtube.com/@",
       icon: <YoutubeIcon />,
     },
-    // {
-    //   platform: "whatsapp",
-    //   url: whatsapp,
-    //   link: "https://wa.me/",
-    //   icon: <WhatsAppIcon />,
-    // },
+    {
+      platform: "pinterest",
+      url: pinterest,
+      link: "https://www.pinterest.com/",
+      icon: <PinterestIcon />,
+    },
     // {
     //   platform: "email",
     //   url: email,
@@ -73,7 +74,7 @@ const SocialLinks = ({ socialLinks }) => {
       <ul className="w-[350px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-5 pl-4">
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
-            <li className="shadow-3xl rounded-full bg-transparent flex-auto" key={platform}>
+            <li className="shadow-3xl rounded-full bg-transparent" key={platform}>
               <Link className="h-[54px] w-[54px] block" href={`${link}/${url}`} target="_blank">
                 {icon}
               </Link>
