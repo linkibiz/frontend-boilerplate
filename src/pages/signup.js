@@ -11,7 +11,7 @@ import WelcomeScreen from "@/components/WelcomeScreen";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const SignUp = () => {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [userId, setUserId] = useState();
   const { userData } = useContext(AuthContext); // use AuthContext
 
