@@ -55,6 +55,20 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
                 </div>
               </div>
               <div className="mt-4">
+                <label htmlFor="website" className="block text-sm font-medium text-white">
+                  Website
+                </label>
+                <div className="flex flex-col items-start">
+                  <input
+                    type="text"
+                    name="website"
+                    value={userData.vcard?.website}
+                    onChange={handleChange}
+                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
+                  />
+                </div>
+              </div>
+              <div className="mt-4">
                 <label htmlFor="telefono_casa" className="block text-sm font-medium text-white">
                   Telefono de casa
                 </label>

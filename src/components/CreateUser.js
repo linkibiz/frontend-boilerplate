@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useAuthContext } from "@/context/auth-context";
 import { setToken } from "@/utils/helpers";
+import LoadingSpinner from "./LoadingSpinner";
 
 const CreateUser = ({ onSubmit, initialData = {} }) => {
   const { userData, setUserData } = useAuthContext();
@@ -30,8 +31,7 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
         onSubmit(data.user.id, slug);
       }
     } catch (error) {
-      console.error(error);
-      setError(error?.message ?? "Something went wrong!");
+      setError("Nombre de usuario ya existe, intente con otro");
     } finally {
       setIsLoading(false);
     }
@@ -118,15 +118,16 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
             </div>
           </div>
           <div className="flex items-center justify-end mt-4 flex-col gap-3">
-            <a className="text-sm text-white underline hover:text-gray-900" href="#">
+            {/* <a className="text-sm text-white underline hover:text-gray-900" href="#">
               ¿Ya tienes cuenta?
-            </a>
+            </a> */}
             <button
               type="submit"
-              className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-900 border border-transparent rounded-md active:bg-gray-900"
+              class="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
-              Siguiente
+              {isLoading ? <LoadingSpinner /> : "Siguiente"}
             </button>
+            {error && <div className="text-red-500 mt-2">{error}</div>}
           </div>
         </form>
       </div>

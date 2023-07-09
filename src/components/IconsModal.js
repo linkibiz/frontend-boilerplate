@@ -35,7 +35,7 @@ const IconsModal = ({ icon, isOpen, closeModal, selectedPlatform, userData, hand
                 value={inputValue}
                 onChange={handleChange}
                 className="border p-2 w-full "
-                placeholder={`${selectedPlatform.name} username`}
+                placeholder={`Usuario de ${selectedPlatform.name}`}
               />
               <div onClick={closeModal} className="mt-4 bg-[#5F2BF8] text-white px-4 py-2 rounded w-full">
                 Guardar 

@@ -57,7 +57,7 @@ const SignUp = () => {
         <div className=" bg-black flex flex-col items-center pt-6 sm:justify-center sm:pt-0">
           <div className=" w-[125px]">
             <Link href="/">
-              <Image src={Logo} />
+              <Image src={Logo} alt="Linki logo"/>
             </Link>
           </div>
         </div>

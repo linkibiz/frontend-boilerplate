@@ -20,7 +20,7 @@ const CreateAvatar = ({ onSubmit, perfilId, slug }) => {
       formData.append("ref", "api::profile.profile"); // La entidad a la que se asocia la imagen
       formData.append("refId", perfilId); // The user ID to associate the image with
       formData.append("field", "avatar");
-      const response = await axios.post("http://localhost:1337/api/upload", formData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/upload`, formData);
 
       if (response.status !== 200) {
         throw new Error(response.data.message);

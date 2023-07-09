@@ -14,14 +14,16 @@ import ContactIcon from "./Icons/ContactIcon";
 import ContactModal from "./ContactModal";
 import LinksIcon from "./Icons/LinksIcon";
 import LinksModal from "./LinksModal";
-const CreateProfile = ({ onSubmit, userId }) => { 
+import LoadingSpinner from "./LoadingSpinner";
+const CreateProfile = ({ onSubmit, userId }) => {
   const { userData, setUserData } = useContext(AuthContext);
   const [socialMediaModalOpen, setSocialMediaModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [linksModalOpen, setLinksModalOpen] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [links, setLinks] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const socialMediaPlatforms = [
     {
@@ -77,11 +79,13 @@ const CreateProfile = ({ onSubmit, userId }) => {
   const handleLinksInputChange = (newLinks) => {
     setUserData({
       ...userData,
-      links: newLinks
+      links: newLinks,
     });
   };
 
   const handleSubmit = async (e) => {
+
+    setIsLoading(true)
     e.preventDefault();
     try {
       const updatedUserData = {
@@ -98,7 +102,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
           tiktok: userData.redes_sociales.tiktok,
           whatsapp: userData.redes_sociales.whatsapp,
           youtube: userData.redes_sociales.youtube,
-          email: userData.redes_sociales.email
+          email: userData.redes_sociales.email,
         },
         vcard: {
           nombre: userData.nombre_completo.split(" ")[0],
@@ -114,17 +118,17 @@ const CreateProfile = ({ onSubmit, userId }) => {
         botones: [
           {
             titulo_de_boton: "Whatsapp",
-            url: userData.vcard.celular
+            url: userData.vcard.celular,
           },
           {
             titulo_de_boton: "Llamar",
-            url: userData.vcard.celular
+            url: userData.vcard.celular,
           },
           {
             titulo_de_boton: "Correo",
-            url: userData.email
-          }
-        ]
+            url: userData.email,
+          },
+        ],
       };
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });
@@ -139,6 +143,9 @@ const CreateProfile = ({ onSubmit, userId }) => {
       onSubmit(response.data.data.id, response.data.data.attributes.slug);
     } catch (error) {
       console.error("Error updating user data:", error.message);
+      setError(error.message)
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -240,10 +247,11 @@ const CreateProfile = ({ onSubmit, userId }) => {
           <div className="flex items-center justify-end mt-8 flex-col gap-3">
             <button
               type="submit"
-              className="w-full mx-auto inline-flex items-center justify-center  py-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-[#5F2BF8] border border-transparent rounded-md active:bg-gray-900"
+              class="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
-              Siguiente
+              {isLoading ? <LoadingSpinner /> : "Siguiente"}
             </button>
+            {error && <div className="text-red-500 mt-2">{error}</div>}
           </div>
         </form>
       </div>
