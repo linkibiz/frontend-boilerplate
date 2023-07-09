@@ -169,7 +169,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 setContactModalOpen(true);
               }}
             >
-              <div className="m-w-[24px] grow-0">
+              <div className="max-w-[24px] grow-0">
                 <ContactIcon />
               </div>
               <div className="grow-1">
@@ -192,10 +192,10 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 setLinksModalOpen(true);
               }}
             >
-              <div>
+              <div className="max-w-[24px] grow-0">
                 <LinksIcon />
               </div>
-              <div>
+              <div className="grow-1">
                 <h3 className="text-white">Links</h3>
               </div>
             </div>
