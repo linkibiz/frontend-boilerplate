@@ -18,7 +18,6 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
     const newLinks = [...links, { titulo: "", url: "" }];
     setLinks(newLinks);
   };
-  
 
   const removeLink = (index) => {
     const newLinks = [...links];
@@ -74,19 +73,27 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
                     onChange={(e) => handleChange(index, "url", e)}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
-                  <button className=" text-red-600  absolute top-0 right-0"  type="button" onClick={() => removeLink(index)}>
+                  <button className=" text-red-600  absolute top-0 right-0" type="button" onClick={() => removeLink(index)}>
                     Quitar link
                   </button>
                 </div>
               ))}
               {links.length < 3 && (
-                <button type="button" className="mt-4 bg-transparent border border-white text-white px-4 py-2 rounded w-full" onClick={addLink}>
+                <button
+                  type="button"
+                  className="mt-4 bg-transparent border border-white text-white px-4 py-2 rounded w-full"
+                  onClick={addLink}
+                >
                   Agregar link
                 </button>
               )}
-              <div onClick={saveLinks} className="text-center mt-4 bg-[#5F2BF8] text-white px-4 py-2 rounded w-full">
+
+              <button
+                onClick={saveLinks}
+                class="w-full mt-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              >
                 Guardar
-              </div>
+              </button>
             </div>
           </div>
         </div>
