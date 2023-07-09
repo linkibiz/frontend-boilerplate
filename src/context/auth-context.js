@@ -13,7 +13,6 @@ export const AuthContext = createContext({
     slug: "",
     nombre_completo: "",
     sobre_mi: "",
-    ocupacion: "",
     redes_sociales: {
       facebook: "",
       linkedin: "",
@@ -58,7 +57,6 @@ const AuthContextProvider = ({ children }) => {
     slug: "",
     nombre_completo: "",
     sobre_mi: "",
-    ocupacion: "",
     redes_sociales: {
       facebook: "",
       linkedin: "",

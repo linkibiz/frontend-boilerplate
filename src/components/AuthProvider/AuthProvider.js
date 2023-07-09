@@ -16,7 +16,6 @@ const AuthProvider = ({ children }) => {
     nombre_completo: "",
     id: null,
     sobre_mi: "",
-    ocupacion: "",
     redes_sociales: {
       facebook: "",
       linkedin: "",
@@ -65,7 +64,6 @@ const AuthProvider = ({ children }) => {
         id: data.id,
         nombre_completo: data?.nombre_completo,
         sobre_mi: profile?.sobre_mi || "",
-        ocupacion: profile?.ocupacion || "",
         avatar: {
           ...profile?.avatar,
           url: profile?.avatar.url,
