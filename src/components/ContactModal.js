@@ -34,7 +34,7 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
                   <input
                     type="text"
                     name="ocupacion"
-                    value={userData.vcard.ocupacion}
+                    value={userData.vcard?.ocupacion}
                     onChange={handleChange}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
@@ -48,7 +48,7 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
                   <input
                     type="number"
                     name="celular"
-                    value={userData.vcard.celular}
+                    value={userData.vcard?.celular}
                     onChange={handleChange}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
@@ -62,7 +62,7 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
                   <input
                     type="number"
                     name="telefono_casa"
-                    value={userData.vcard.telefono_casa}
+                    value={userData.vcard?.telefono_casa}
                     onChange={handleChange}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
@@ -76,7 +76,7 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
                   <input
                     type="number"
                     name="telefono_trabajo"
-                    value={userData.vcard.telefono_trabajo}
+                    value={userData.vcard?.telefono_trabajo}
                     onChange={handleChange}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
@@ -90,7 +90,7 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
                   <input
                     type="email"
                     name="email_trabajo"
-                    value={userData.vcard.email_trabajo}
+                    value={userData.vcard?.email_trabajo}
                     onChange={handleChange}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
