@@ -1,9 +1,9 @@
 import React from "react";
 import { Transition } from "react-transition-group";
 
-const ContactModal = ({ isOpen, closeContactModal, userData, handleProfileInputChange }) => {
+const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardInputChange }) => {
   const handleChange = (e) => {
-    handleProfileInputChange(e);
+    handleContactCardInputChange(e);
   };
 
   return (

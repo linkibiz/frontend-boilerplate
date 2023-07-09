@@ -181,7 +181,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 isOpen={contactModalOpen}
                 closeContactModal={() => setContactModalOpen(false)}
                 userData={userData}
-                handleProfileInputChange={handleContactCardInputChange}
+                handleContactCardInputChange={handleContactCardInputChange}
               />
             )}
           </div>
