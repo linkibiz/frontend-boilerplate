@@ -18,12 +18,12 @@ const Profile = ({ profileData }) => {
       <div className="w-full -space-x-1 relative z-10 shadow-lg rounded-3xl">
         <div className="flex items-center bg-black rounded-3xl border border-[#575656]">
           <Image
-            className="rounded-l-3xl inline-block object-cover h-48 max-w-full"
+            className="rounded-l-3xl inline-block object-cover h-48 max-w-[50%]"
             loader={myLoader}
             src={src}
             width={500}
             height={500}
-            alt={`Foto de ${nombre_completo}`}
+            alt={`Foto perfil de ${nombre_completo}`}
           />
           <div className="text-white w-full flex flex-col items-start gap-y-3.5 p-5">
             <h1 className="font-bold text-3xl text-left">{nombre_completo}</h1>
