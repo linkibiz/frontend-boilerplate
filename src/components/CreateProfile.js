@@ -37,10 +37,6 @@ const CreateProfile = ({ onSubmit, userId }) => {
       icon: <TwitterIcon />,
     },
     {
-      name: "website",
-      icon: <WebsiteIcon />,
-    },
-    {
       name: "tiktok",
       icon: <TikTokIcon />,
     },
@@ -173,10 +169,10 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 setContactModalOpen(true);
               }}
             >
-              <div>
+              <div className="m-w-[24px] grow-0">
                 <ContactIcon />
               </div>
-              <div>
+              <div className="grow-1">
                 <h3 className="text-white">Tarjeta de contacto</h3>
               </div>
             </div>
@@ -218,7 +214,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
             <div className="flex flex-wrap gap-3 justify-between">
               {socialMediaPlatforms.map((platform) => (
                 <div
-                  className="w-[64px]"
+                  className="w-[48px]"
                   key={platform.name}
                   onClick={() => {
                     setSelectedPlatform(platform);
