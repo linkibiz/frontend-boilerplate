@@ -11,7 +11,7 @@ const Links = ({ linksList }) => {
             <>
               <Link
                 href={link.url}
-                target={link.target}
+                target="_blank"
                 className="w-full tracking-[0.2em] py-[10px] px-[20px] font-bold text-left bg-[#272727] rounded-xl text-white uppercase text-xs flex items-center justify-between"
                 key={link.id}
               >
