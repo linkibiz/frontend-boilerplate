@@ -92,7 +92,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
         ...userData,
         profile: userId,
         slug: userData.username,
-        ocupacion: userData.vcard.ocupacion,
+        // ocupacion: userData.vcard.ocupacion,
         redes_sociales: {
           facebook: userData.redes_sociales.facebook,
           linkedin: userData.redes_sociales.linkedin,

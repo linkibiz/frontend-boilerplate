@@ -42,9 +42,9 @@ const ContactButtons = ({ contactButtons }) => {
             : dataItem?.titulo_de_boton === "Llamar"
             ? `tel:${dataItem.url}`
             : dataItem?.titulo_de_boton === "Whatsapp"
-            ? `https://wa.me/${dataItem.url.split(' ').join('')}`
+            ? `https://wa.me/${dataItem.url?.split(' ').join('')}`
             : dataItem?.url;
-        return dataItem ? (
+        return dataItem && dataItem.url ? (
           <div className="w-full bg-[#0a0a0a] p-[10px] rounded-lg">
             <Link href={ref} className="text-orange-500" target="blank">
               <div className="flex items-center gap-5 justify-start">
