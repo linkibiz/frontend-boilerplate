@@ -15,16 +15,18 @@ const CreateAvatar = ({ onSubmit, perfilId, slug }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append("files", selectedImage);
-      formData.append("ref", "api::profile.profile"); // La entidad a la que se asocia la imagen
-      formData.append("refId", perfilId); // The user ID to associate the image with
-      formData.append("field", "avatar");
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/upload`, formData);
-
-      if (response.status !== 200) {
-        throw new Error(response.data.message);
+      if(selectedImage){
+        const formData = new FormData();
+        formData.append("files", selectedImage);
+        formData.append("ref", "api::profile.profile"); // La entidad a la que se asocia la imagen
+        formData.append("refId", perfilId); // The user ID to associate the image with
+        formData.append("field", "avatar");
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/upload`, formData);
+        if (response.status !== 200) {
+          throw new Error(response.data.message);
+        }
       }
+
 
       onSubmit();
       router.push(`/${slug}`);

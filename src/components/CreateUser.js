@@ -8,15 +8,37 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
   const { userData, setUserData } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+
+  const isValidUsername = (username) => {
+    return !/[@\s]/.test(username);
+}
+
+  const validateUsernameOnInput = (username) => {
+    if (!isValidUsername(username)) {
+      setUsernameError("El nombre de usuario no debe contener espacios en blanco ni el símbolo '@'");
+    } else {
+      setUsernameError(""); // clear the error if username becomes valid
+    }
+  };
 
   const handleUserInputChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+    // validate username if the input changed is username
+    if (name === "username") {
+      validateUsernameOnInput(value);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsLoading(true);
+    if (usernameError) {
+      setIsLoading(false);
+      return; // Don't proceed if there's a username error
+    }
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, userData);
       const data = response.data;
@@ -70,6 +92,7 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
                 required
                 className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
+              {usernameError && <div className="text-red-500 mt-1">{usernameError}</div>}
             </div>
           </div>
           <div className="mt-4">
@@ -123,7 +146,7 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
             </a> */}
             <button
               type="submit"
-              class="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              className="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               {isLoading ? <LoadingSpinner /> : "Siguiente"}
             </button>
