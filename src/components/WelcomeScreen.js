@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import Banner from "../../public/images/linki-welcome-banner.png";
 import WelcomeBanner from "./WelcomeBanner";
 const WelcomeScreen = ({onSubmit}) => {
   
