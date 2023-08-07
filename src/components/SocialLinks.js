@@ -59,7 +59,7 @@ const SocialLinks = ({ socialLinks }) => {
   ];
   return (
     <>
-      <ul className="w-[370px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-6 pl-4">
+      <ul className="w-[370px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-5">
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
             <li className="rounded-full bg-transparent" key={platform}>
