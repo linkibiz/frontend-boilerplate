@@ -27,9 +27,9 @@ const Perfil = ({ data }) => {
             <QrImage value={slug} />
             {data.attributes.vcard != null && <Vcard vcardData={data} />}
           </div>
-          {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
-          {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
           {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data.attributes.botones} />}
+          {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
+          {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
           {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
         </Wrapper>
       </LoadingComponent>

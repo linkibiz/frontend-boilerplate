@@ -59,11 +59,12 @@ const SocialLinks = ({ socialLinks }) => {
   ];
   return (
     <>
-      <ul className="w-[370px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-5">
+      <h2 className="font-bold">Redes sociales</h2>
+      <ul className="w-[370px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-6 justify-between">
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
             <li className="rounded-full bg-transparent" key={platform}>
-              <Link className="h-[54px] w-[54px] block" href={`${link}/${url}`} target="_blank">
+              <Link className="h-[38px] w-[38px] block" href={`${link}/${url}`} target="_blank">
                 {icon}
               </Link>
             </li>

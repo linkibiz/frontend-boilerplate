@@ -5,7 +5,7 @@ const About = ({ info }) => {
     <>
       {info && (
         <div className="flex flex-col gap-3 w-full items-left text-black text-justify">
-          {/* <p className="font-bold">Sobre mi</p> */}
+          <p className="font-bold">Sobre mi</p>
           <p>{info}</p>
         </div>
       )}

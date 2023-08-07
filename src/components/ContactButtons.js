@@ -33,7 +33,7 @@ const contactIcons = [
 const ContactButtons = ({ contactButtons }) => {
   // const contactButtons = contactData.attributes.botones;
   return (
-    <div className="flex w-full flex-col items-start gap-3">
+    <div className="flex gap-10 justify-center items-center w-full">
       {contactIcons.map(({ iconType, icon, id }) => {
         const dataItem = contactButtons.find((item) => item.titulo_de_boton === iconType);
         const ref =
@@ -42,19 +42,14 @@ const ContactButtons = ({ contactButtons }) => {
             : dataItem?.titulo_de_boton === "Llamar"
             ? `tel:${dataItem.url}`
             : dataItem?.titulo_de_boton === "Whatsapp"
-            ? `https://wa.me/${dataItem.url?.split(' ').join('')}`
+            ? `https://wa.me/${dataItem.url?.split(" ").join("")}`
             : dataItem?.url;
         return dataItem && dataItem.url ? (
-          <div className="w-full bg-[#20b6e4] p-[15px] rounded-lg">
-            <Link href={ref} className="text-white" target="blank">
-              <div className="flex items-center gap-5 justify-start">
-                <div className="h-5 grow-0 max-w-[20px]">{icon}</div>
-                <div className="text-sm grow">{dataItem.titulo_de_boton}</div>
-                <div className=" pr-[5px]">
-                  {">"}
-                </div>
-              </div>
+          <div className="flex flex-col items-center gap-2">
+            <Link href={ref} className=" h-14 w-14 bg-[#222222] p-4 rounded-full" target="blank">
+              {icon}
             </Link>
+            <p className="font-bold text-sm">{dataItem.titulo_de_boton}</p>
           </div>
         ) : null;
       })}

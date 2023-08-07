@@ -12,11 +12,10 @@ const Links = ({ linksList }) => {
               <Link
                 href={link.url}
                 target="_blank"
-                className="w-full tracking-[0.2em] py-[10px] px-[20px] font-bold text-left bg-[#272727] rounded-xl text-white uppercase text-xs flex items-center justify-between"
+                className="w-full tracking-[0.2em] p-[15px] font-bold text-left bg-white rounded-xl text-black uppercase text-xs flex items-center justify-between"
                 key={link.id}
               >
-                <h3 className=" text-left grow">{link.titulo}</h3>
-                <div className=" h-4">{">"}</div>
+                <h3 className=" text-center grow">{link.titulo}</h3>
               </Link>
             </>
           ))}
