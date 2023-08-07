@@ -46,7 +46,7 @@ const ContactButtons = ({ contactButtons }) => {
             : dataItem?.url;
         return dataItem && dataItem.url ? (
           <div className="flex flex-col items-center gap-2">
-            <Link href={ref} className=" h-14 w-14 bg-[#222222] p-4 rounded-full" target="blank">
+            <Link href={ref} className="h-14 w-14 bg-[#222222] p-4 rounded-full" target="blank">
               {icon}
             </Link>
             <p className="font-bold text-sm">{dataItem.titulo_de_boton}</p>
