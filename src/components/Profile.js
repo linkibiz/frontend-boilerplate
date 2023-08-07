@@ -14,15 +14,16 @@ const Profile = ({ profileData }) => {
     .map((name) => name[0])
     .join("")
     .toUpperCase();
+
   return (
     <>
       <div className="w-full -space-x-1 relative z-10 shadow-lg rounded-3xl">
-        <div className="flex items-center bg-black rounded-3xl border border-[#575656]">
+        <div className="flex items-center bg-white rounded-3xl">
           {src === "" ? (
             ""
           ) : (
             <Image
-              className="rounded-l-3xl inline-block object-cover h-48 max-w-[50%]"
+              className="rounded-l-3xl inline-block object-contain h-fit max-w-[50%]"
               loader={myLoader}
               src={src}
               width={500}
@@ -31,8 +32,8 @@ const Profile = ({ profileData }) => {
             />
           )}
 
-          <div className="text-white w-full flex flex-col items-start gap-y-3.5 p-5 items-center">
-            <h1 className="font-bold text-3xl text-left">{nombre_completo}</h1>
+          <div className="text-black w-full flex flex-col gap-y-3.5 p-5 items-center">
+            <h1 className="font-bold text-3xl text-center">{nombre_completo}</h1>
             <p className="text-xs tracking-wider font-bold">{ocupacion}</p>
           </div>
         </div>

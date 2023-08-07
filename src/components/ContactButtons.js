@@ -45,8 +45,8 @@ const ContactButtons = ({ contactButtons }) => {
             ? `https://wa.me/${dataItem.url?.split(' ').join('')}`
             : dataItem?.url;
         return dataItem && dataItem.url ? (
-          <div className="w-full bg-[#0a0a0a] p-[10px] rounded-lg">
-            <Link href={ref} className="text-orange-500" target="blank">
+          <div className="w-full bg-[#20b6e4] p-[15px] rounded-lg">
+            <Link href={ref} className="text-white" target="blank">
               <div className="flex items-center gap-5 justify-start">
                 <div className="h-5 grow-0 max-w-[20px]">{icon}</div>
                 <div className="text-sm grow">{dataItem.titulo_de_boton}</div>

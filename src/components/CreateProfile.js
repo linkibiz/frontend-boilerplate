@@ -15,6 +15,7 @@ import ContactModal from "./ContactModal";
 import LinksIcon from "./Icons/LinksIcon";
 import LinksModal from "./LinksModal";
 import LoadingSpinner from "./LoadingSpinner";
+
 const CreateProfile = ({ onSubmit, userId }) => {
   const { userData, setUserData } = useContext(AuthContext);
   const [socialMediaModalOpen, setSocialMediaModalOpen] = useState(false);
@@ -83,69 +84,72 @@ const CreateProfile = ({ onSubmit, userId }) => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const generateUpdatedUserData = (userData) => {
+    const { redes_sociales, vcard, links, email, nombre_completo, username } = userData;
 
-    setIsLoading(true)
+    const updatedUserData = {
+      ...userData,
+      profile: userId,
+      slug: username,
+      redes_sociales: {
+        facebook: redes_sociales?.facebook,
+        linkedin: redes_sociales?.linkedin,
+        twitter: redes_sociales?.twitter,
+        instagram: redes_sociales?.instagram,
+        website: redes_sociales?.website,
+        tiktok: redes_sociales?.tiktok,
+        whatsapp: redes_sociales?.whatsapp,
+        youtube: redes_sociales?.youtube,
+        email: redes_sociales?.email,
+      },
+      vcard: {
+        nombre: nombre_completo?.split(" ")[0],
+        apellido: nombre_completo?.split(" ")[1],
+        email: email,
+        ocupacion: vcard?.ocupacion,
+        celular: vcard?.celular,
+        telefono_casa: vcard?.telefono_casa,
+        telefono_trabajo: vcard?.telefono_trabajo,
+        email_trabajo: vcard?.email_trabajo,
+      },
+      links: links,
+      botones: [
+        {
+          titulo_de_boton: "Whatsapp",
+          url: vcard?.celular,
+        },
+        {
+          titulo_de_boton: "Llamar",
+          url: vcard?.celular,
+        },
+        {
+          titulo_de_boton: "Correo",
+          url: email,
+        },
+      ],
+    };
+
+    return updatedUserData;
+  };
+
+  const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     try {
-      const updatedUserData = {
-        ...userData,
-        profile: userId,
-        slug: userData?.username,
-        // ocupacion: userData.vcard.ocupacion,
-        redes_sociales: {
-          facebook: userData?.redes_sociales?.facebook,
-          linkedin: userData?.redes_sociales?.linkedin,
-          twitter: userData?.redes_sociales?.twitter,
-          instagram: userData?.redes_sociales?.instagram,
-          website: userData?.redes_sociales?.website,
-          tiktok: userData?.redes_sociales?.tiktok,
-          whatsapp: userData?.redes_sociales?.whatsapp,
-          youtube: userData?.redes_sociales?.youtube,
-          email: userData?.redes_sociales?.email,
-        },
-        vcard: {
-          nombre: userData?.nombre_completo?.split(" ")[0],
-          apellido: userData?.nombre_completo?.split(" ")[1],
-          email: userData?.email,
-          ocupacion: userData?.vcard?.ocupacion,
-          celular: userData?.vcard?.celular,
-          telefono_casa: userData?.vcard?.telefono_casa,
-          telefono_trabajo: userData?.vcard?.telefono_trabajo,
-          email_trabajo: userData?.vcard?.email_trabajo,
-        },
-        links: userData.links,
-        botones: [
-          {
-            titulo_de_boton: "Whatsapp",
-            url: userData?.vcard?.celular,
-          },
-          {
-            titulo_de_boton: "Llamar",
-            url: userData?.vcard?.celular,
-          },
-          {
-            titulo_de_boton: "Correo",
-            url: userData?.email,
-          },
-        ],
-      };
+      const updatedUserData = generateUpdatedUserData(userData);
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });
 
       if (response.status !== 200) {
         throw new Error(response.data.message);
       }
-
-      // Updating the userData in the context
       setUserData(updatedUserData);
-      console.log(response.data.data.attributes.slug, response.data.data.id);
       onSubmit(response.data.data.id, response.data.data.attributes.slug);
     } catch (error) {
       console.error("Error updating user data:", error.message);
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -247,7 +251,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
           <div className="flex items-center justify-end mt-8 flex-col gap-3">
             <button
               type="submit"
-              class="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              class="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800  shadow-cyan-500/50  dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               {isLoading ? <LoadingSpinner /> : "Siguiente"}
             </button>

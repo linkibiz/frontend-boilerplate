@@ -18,8 +18,8 @@ const Perfil = ({ data }) => {
   const { slug } = router.query;
   return (
     <Layout pageName={slug}>
-      {/* <Banner banner={data.attributes.banner} /> */}
       <LoadingComponent>
+        <Banner />
         <Wrapper>
           <Navbar />
           <Profile profileData={data} />

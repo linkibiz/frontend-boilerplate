@@ -3,22 +3,33 @@ import axios from "axios";
 import { useAuthContext } from "@/context/auth-context";
 import { setToken } from "@/utils/helpers";
 import LoadingSpinner from "./LoadingSpinner";
+import InputField from "./InputField";
 
 const CreateUser = ({ onSubmit, initialData = {} }) => {
   const { userData, setUserData } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-
+  const [passwordError, setPasswordError] = useState("");
   const isValidUsername = (username) => {
     return !/[@\s]/.test(username);
-}
+  };
 
   const validateUsernameOnInput = (username) => {
     if (!isValidUsername(username)) {
       setUsernameError("El nombre de usuario no debe contener espacios en blanco ni el símbolo '@'");
     } else {
       setUsernameError(""); // clear the error if username becomes valid
+    }
+  };
+
+  const validatePasswordMatch = () => {
+    if (userData.password !== userData.password_confirmation) {
+      setPasswordError("Las contraseñas no coinciden");
+      return false;
+    } else {
+      setPasswordError("");
+      return true;
     }
   };
 
@@ -37,8 +48,14 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
     setIsLoading(true);
     if (usernameError) {
       setIsLoading(false);
-      return; // Don't proceed if there's a username error
+      return;
     }
+
+    if (!validatePasswordMatch()) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, userData);
       const data = response.data;
@@ -64,89 +81,42 @@ const CreateUser = ({ onSubmit, initialData = {} }) => {
     <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
       <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="nombre_completo" className="block text-sm font-medium text-white">
-              Nombre y Apellido:
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="nombre_completo"
-                value={userData.nombre_completo}
-                onChange={handleUserInputChange}
-                required
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label htmlFor="name" className="block text-sm font-medium text-white">
-              Usuario
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="text"
-                name="username"
-                value={userData.username}
-                onChange={handleUserInputChange}
-                required
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-              {usernameError && <div className="text-red-500 mt-1">{usernameError}</div>}
-            </div>
-          </div>
-          <div className="mt-4">
-            <label htmlFor="email" className="block text-sm font-medium text-white">
-              Email
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="email"
-                name="email"
-                value={userData.email}
-                onChange={handleUserInputChange}
-                required
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label htmlFor="password" className="block text-sm font-medium text-white">
-              Contraseña
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="password"
-                name="password"
-                value={userData.password}
-                onChange={handleUserInputChange}
-                required
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label htmlFor="password_confirmation" className="block text-sm font-medium text-white">
-              Confirmar Contraseña
-            </label>
-            <div className="flex flex-col items-start">
-              <input
-                type="password"
-                name="password_confirmation"
-                value={userData.password_confirmation}
-                onChange={handleUserInputChange}
-                required
-                className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-          </div>
+          <InputField
+            label="Nombre y Apellido:"
+            name="nombre_completo"
+            type="text"
+            value={userData.nombre_completo}
+            onChange={handleUserInputChange}
+          />
+
+          <InputField
+            label="Usuario"
+            name="username"
+            type="text"
+            value={userData.username}
+            onChange={handleUserInputChange}
+            errorMessage={usernameError}
+          />
+
+          <InputField label="Email" name="email" type="email" value={userData.email} onChange={handleUserInputChange} />
+
+          <InputField label="Contraseña" name="password" type="password" value={userData.password} onChange={handleUserInputChange} />
+
+          <InputField
+            label="Confirmar Contraseña"
+            name="password_confirmation"
+            type="password"
+            value={userData.password_confirmation}
+            onChange={handleUserInputChange}
+            errorMessage={passwordError}
+          />
           <div className="flex items-center justify-end mt-4 flex-col gap-3">
             {/* <a className="text-sm text-white underline hover:text-gray-900" href="#">
               ¿Ya tienes cuenta?
             </a> */}
             <button
               type="submit"
-              className="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              className="w-full max-w-[250px] text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               {isLoading ? <LoadingSpinner /> : "Siguiente"}
             </button>

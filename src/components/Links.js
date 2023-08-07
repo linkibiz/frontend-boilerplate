@@ -6,7 +6,7 @@ const Links = ({ linksList }) => {
     <>
       {linksList.length > 0 && (
         <div className="flex flex-col gap-3 w-full items-left">
-          <p className="font-bold text-white tracking-[0.2em]">Links</p>
+          <p className="font-bold text-black tracking-[0.2em]">Links</p>
           {linksList.map((link) => (
             <>
               <Link

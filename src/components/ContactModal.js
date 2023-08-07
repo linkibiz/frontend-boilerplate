@@ -1,5 +1,6 @@
 import React from "react";
 import { Transition } from "react-transition-group";
+import InputField from "./InputField";
 
 const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardInputChange }) => {
   const handleChange = (e) => {
@@ -26,94 +27,40 @@ const ContactModal = ({ isOpen, closeContactModal, userData, handleContactCardIn
               <div className="mb-4 flex gap-4 justify-between items-center flex-col">
                 <h2 className="text-white capitalize ">Tarjeta de contacto</h2>
               </div>
-              <div className="mt-4">
-                <label htmlFor="ocupacion" className="block text-sm font-medium text-white">
-                  Ocupacion
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="ocupacion"
-                    value={userData.vcard?.ocupacion}
-                    onChange={handleChange}
-                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="celular" className="block text-sm font-medium text-white">
-                  Numero celular
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="number"
-                    name="celular"
-                    value={userData.vcard?.celular}
-                    onChange={handleChange}
-                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="website" className="block text-sm font-medium text-white">
-                  Website
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="website"
-                    value={userData.vcard?.website}
-                    onChange={handleChange}
-                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="telefono_casa" className="block text-sm font-medium text-white">
-                  Telefono de casa
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="number"
-                    name="telefono_casa"
-                    value={userData.vcard?.telefono_casa}
-                    onChange={handleChange}
-                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="telefono_trabajo" className="block text-sm font-medium text-white">
-                  Telefono de trabajo
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="number"
-                    name="telefono_trabajo"
-                    value={userData.vcard?.telefono_trabajo}
-                    onChange={handleChange}
-                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="email_trabajo" className="block text-sm font-medium text-white">
-                  Email de trabajo
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="email"
-                    name="email_trabajo"
-                    value={userData.vcard?.email_trabajo}
-                    onChange={handleChange}
-                    className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
-                  />
-                </div>
-              </div>
+
+              <InputField type="text" name="ocupacion" value={userData.vcard?.ocupacion} onChange={handleChange} label="Ocupacion" />
+
+              <InputField type="number" name="celular" value={userData.vcard?.celular} onChange={handleChange} label="Numero celular" />
+
+              <InputField type="text" name="website" value={userData.vcard?.website} onChange={handleChange} label="Website" />
+
+              <InputField
+                type="number"
+                name="telefono_casa"
+                value={userData.vcard?.telefono_casa}
+                onChange={handleChange}
+                label="Telefono de casa"
+              />
+
+              <InputField
+                type="number"
+                name="telefono_trabajo"
+                value={userData.vcard?.telefono_trabajo}
+                onChange={handleChange}
+                label="Telefono de trabajo"
+              />
+
+              <InputField
+                type="email"
+                name="email_trabajo"
+                value={userData.vcard?.email_trabajo}
+                onChange={handleChange}
+                label="Email de trabajo"
+              />
 
               <button
                 onClick={closeContactModal}
-                class="w-full mt-5 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                class="w-full mt-5 text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
               >
                 Guardar
               </button>
