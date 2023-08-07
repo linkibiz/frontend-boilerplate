@@ -19,7 +19,7 @@ const Perfil = ({ data }) => {
   return (
     <Layout pageName={slug}>
       <LoadingComponent>
-        <Banner />
+        <Banner /> 
         <Wrapper>
           <Navbar />
           <Profile profileData={data} />
