@@ -65,7 +65,7 @@ const SocialLinks = ({ socialLinks }) => {
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
             <li className={`rounded-full bg-transparent ${nullValuesCount < 4 ? "w-[25%]" : "w-[15%]"} min-w-[16%]`} key={platform}>
-              <Link className="w-full block" href={`${link}/${url}`} target="_blank">
+              <Link className="w-full block" href={`${link}${url}`} target="_blank">
                 {icon}
               </Link>
             </li>
