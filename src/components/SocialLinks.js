@@ -13,7 +13,8 @@ import PinterestIcon from "./Icons/PinterestIcon";
 
 const SocialLinks = ({ socialLinks }) => {
   const { pinterest, facebook, instagram, linkedin, twitter, tiktok, youtube, whatsapp, email } = socialLinks;
-  const nullValuesCount = Object.values(socialLinks).filter(value => value === null).length;
+  const nullValuesCount = Object.values(socialLinks).filter((value) => value === null).length;
+  console.log(nullValuesCount);
   const socialMediaPlatforms = [
     {
       platform: "facebook",
@@ -60,7 +61,8 @@ const SocialLinks = ({ socialLinks }) => {
   ];
   return (
     <>
-      <h2 className="font-bold">Redes sociales</h2>
+      {nullValuesCount < 7 && <h2 className="font-bold">Redes sociales</h2>}
+
       <ul className={`w-[370px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-6 justify-start`}>
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
