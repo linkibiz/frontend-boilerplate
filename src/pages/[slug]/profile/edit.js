@@ -101,6 +101,8 @@ const ProfileEdit = () => {
     }
   };
 
+  console.log(userData)
+
   return (
     <Layout pageName={`${slug} - Edit`}>
       <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
@@ -135,7 +137,7 @@ const ProfileEdit = () => {
                     name="sobre_mi"
                     rows="5"
                     cols="33"
-                    value={userData.sobre_mi}
+                    value={userData?.sobre_mi}
                     onChange={handleUserInputChange}
                     className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
@@ -149,13 +151,13 @@ const ProfileEdit = () => {
                   <input
                     type="text"
                     name="ocupacion"
-                    value={userData.vcard.ocupacion}
+                    value={userData?.ocupacion}
                     onChange={handleUserInputChange}
                     className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
                 </div>
               </div>
-              {userData.links.map((link, index) => (
+              {/* {userData?.links.map((link, index) => (
                 <div key={index}>
                   <div className="mt-4">
                     <label htmlFor={`link-name-${index}`} className="block text-sm font-medium text-white">
@@ -184,7 +186,7 @@ const ProfileEdit = () => {
                     />
                   </div>
                 </div>
-              ))}
+              ))} */}
               <div className="mt-4">
                 <h3 className=" text-white my-3 font-bold">Redes sociales</h3>
                 <label htmlFor="facebook" className="block text-sm font-medium text-white">
@@ -194,7 +196,7 @@ const ProfileEdit = () => {
                   <input
                     type="text"
                     name="facebook"
-                    value={userData.redes_sociales?.facebook || ""}
+                    value={userData?.redes_sociales?.facebook || ""}
                     onChange={handleSocialLinksInputChange}
                     className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
@@ -206,7 +208,7 @@ const ProfileEdit = () => {
                   <input
                     type="text"
                     name="instagram"
-                    value={userData.redes_sociales?.instagram || ""}
+                    value={userData?.redes_sociales?.instagram || ""}
                     onChange={handleSocialLinksInputChange}
                     className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
@@ -218,7 +220,7 @@ const ProfileEdit = () => {
                   <input
                     type="text"
                     name="twitter"
-                    value={userData.redes_sociales?.twitter || ""}
+                    value={userData?.redes_sociales?.twitter || ""}
                     onChange={handleSocialLinksInputChange}
                     className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
@@ -230,7 +232,7 @@ const ProfileEdit = () => {
                   <input
                     type="text"
                     name="linkedin"
-                    value={userData.redes_sociales?.linkedin || ""}
+                    value={userData?.redes_sociales?.linkedin || ""}
                     onChange={handleSocialLinksInputChange}
                     className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />

@@ -30,6 +30,7 @@ const AuthProvider = ({ children }) => {
     links: [
     ],
     botones: [],
+    ocupacion: "",
     vcard: {
       nombre: "",
       apellido: "",
@@ -83,6 +84,7 @@ const AuthProvider = ({ children }) => {
           whatsapp: profile?.redes_sociales.whatsapp || "",
           email: profile?.redes_sociales.email || ""
         },
+        ocupacion: profile?.ocupacion,
         links: profile?.links || [],
         botones: profile?.botones || [],
         vcard: {

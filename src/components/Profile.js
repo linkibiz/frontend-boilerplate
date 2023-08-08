@@ -23,7 +23,7 @@ const Profile = ({ profileData }) => {
             ""
           ) : (
             <Image
-              className="rounded-l-3xl inline-block object-contain h-fit max-w-[50%]"
+              className="rounded-l-3xl inline-block object-cover h-fit max-w-[50%] min-h-[175px]"
               loader={myLoader}
               src={src}
               width={500}

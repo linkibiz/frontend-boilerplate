@@ -91,6 +91,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
       ...userData,
       profile: userId,
       slug: username,
+      ocupacion: vcard?.ocupacion,
       redes_sociales: {
         facebook: redes_sociales?.facebook,
         linkedin: redes_sociales?.linkedin,
