@@ -9,16 +9,12 @@ const Profile = ({ profileData }) => {
     return src;
   };
 
-  const splitName = nombre_completo
-    .split(" ")
-    .map((name) => name[0])
-    .join("")
-    .toUpperCase();
+  console.log(avatar.data)
 
   return (
     <>
       <div className="w-full -space-x-1 relative z-10 shadow-lg rounded-3xl">
-        <div className="flex items-center bg-white rounded-3xl">
+        <div className={`flex items-center bg-white rounded-3xl ${avatar.data === null ? "min-h-[175px] justify-center" : ""}`}>
           {src === "" ? (
             ""
           ) : (
