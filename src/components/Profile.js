@@ -30,7 +30,7 @@ const Profile = ({ profileData }) => {
 
           <div className="text-black w-full flex flex-col gap-y-3.5 p-5 items-center">
             <h1 className="font-bold text-3xl text-center">{nombre_completo}</h1>
-            <p className="text-xs tracking-wider font-bold">{ocupacion}</p>
+            <p className="text-xs tracking-wider font-bold text-center">{ocupacion}</p>
           </div>
         </div>
       </div>
