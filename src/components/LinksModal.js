@@ -26,7 +26,6 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
   };
 
   const saveLinks = () => {
-    console.log(links)
     handleLinksInputChange(links);
     closeContactModal();
   };
@@ -50,7 +49,7 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
               <div className="mb-4 flex gap-4 justify-between items-center flex-col">
                 <h2 className="text-white capitalize ">Links</h2>
               </div>
-              {links.map((link, index) => (
+              {links?.map((link, index) => (
                 <div key={index} className="relative flex flex-col gap-1">
                   <label htmlFor={`link-title-${index}`} className="block text-sm font-medium text-white">
                     Título:

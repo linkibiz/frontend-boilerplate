@@ -9,7 +9,6 @@ const Profile = ({ profileData }) => {
     return src;
   };
 
-  console.log(avatar.data)
 
   return (
     <>

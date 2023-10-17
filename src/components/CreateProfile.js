@@ -84,7 +84,6 @@ const CreateProfile = ({ onSubmit, userId }) => {
     });
   };
 
-  console.log(userData)
 
   const generateUpdatedUserData = (userData) => {
     const { redes_sociales, vcard, links, email, nombre_completo, username } = userData;
@@ -219,7 +218,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 closeContactModal={() => setLinksModalOpen(false)}
                 userData={userData}
                 handleLinksInputChange={handleLinksInputChange}
-                initialLinks={userData.links}
+                initialLinks={userData.links ? userData.links : []}
               />
             )}
           </div>
