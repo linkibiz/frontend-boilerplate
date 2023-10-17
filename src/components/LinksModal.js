@@ -26,6 +26,7 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
   };
 
   const saveLinks = () => {
+    console.log(links)
     handleLinksInputChange(links);
     closeContactModal();
   };

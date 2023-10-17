@@ -101,7 +101,6 @@ const ProfileEdit = () => {
     }
   };
 
-  console.log(userData)
 
   return (
     <Layout pageName={`${slug} - Edit`}>

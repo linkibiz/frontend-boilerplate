@@ -80,9 +80,11 @@ const CreateProfile = ({ onSubmit, userId }) => {
   const handleLinksInputChange = (newLinks) => {
     setUserData({
       ...userData,
-      links: newLinks,
+      links: newLinks
     });
   };
+
+  console.log(userData)
 
   const generateUpdatedUserData = (userData) => {
     const { redes_sociales, vcard, links, email, nombre_completo, username } = userData;
@@ -113,7 +115,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
         telefono_trabajo: vcard?.telefono_trabajo,
         email_trabajo: vcard?.email_trabajo,
       },
-      links: links,
+      links,
       botones: [
         {
           titulo_de_boton: "Whatsapp",
@@ -217,7 +219,7 @@ const CreateProfile = ({ onSubmit, userId }) => {
                 closeContactModal={() => setLinksModalOpen(false)}
                 userData={userData}
                 handleLinksInputChange={handleLinksInputChange}
-                initialLinks={links}
+                initialLinks={userData.links}
               />
             )}
           </div>

@@ -14,7 +14,6 @@ import PinterestIcon from "./Icons/PinterestIcon";
 const SocialLinks = ({ socialLinks }) => {
   const { pinterest, facebook, instagram, linkedin, twitter, tiktok, youtube, whatsapp, email } = socialLinks;
   const nullValuesCount = Object.values(socialLinks).filter((value) => value === null).length;
-  console.log(nullValuesCount);
   const socialMediaPlatforms = [
     {
       platform: "facebook",
