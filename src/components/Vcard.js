@@ -9,7 +9,8 @@ const downloadVCard = (vcardText) => {
 
 const Vcard = ({ vcardData }) => {
   const { nombre, ocupacion, website, email, celular, apellido, telefono_casa, telefono_trabajo, email_trabajo } =
-    vcardData.attributes.vcard;
+  vcardData.attributes.vcard;
+  console.log("DATA", celular)
 
   const CreateVCard = () => {
     var vCardsJS = require("vcards-js");

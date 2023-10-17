@@ -59,6 +59,7 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
                     name={`link-title-${index}`}
                     type="text"
                     value={link.titulo}
+                    placeholder="Google"
                     onChange={(e) => handleChange(index, "titulo", e)}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
@@ -70,6 +71,7 @@ const LinksModal = ({ isOpen, closeContactModal, handleLinksInputChange, initial
                     name={`link-url-${index}`}
                     type="text"
                     value={link.url}
+                    placeholder="www.google.com"
                     onChange={(e) => handleChange(index, "url", e)}
                     className="bg-[#1c1a20] text-white p-2 block w-full mt-1 border border-gray-600 rounded-md shadow-sm"
                   />
