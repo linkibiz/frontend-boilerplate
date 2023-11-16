@@ -1,14 +1,17 @@
-import withAuth from "@/components/withAuth";
+import EditSocialsModal from "@/components/EditSocialsModal";
 import Layout from "@/components/Layout";
-import Logo from "../../../../public/images/linki-logo.png";
-import Image from "next/image";
-import Link from "next/link";
+import withAuth from "@/components/withAuth";
 import { useAuthContext } from "@/context/auth-context";
-import { useState, useEffect } from "react";
+import { API } from "@/utils/constant";
 import { getToken } from "@/utils/helpers";
 import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { API } from "@/utils/constant";
+import { useEffect, useState } from "react";
+import Logo from "../../../../public/images/linki-logo.png";
+import InstagramIcon from "@/components/Icons/InstagramIcon";
+import QuestionMark from "@/components/Icons/QuestionMark";
 
 const ProfileEdit = () => {
   const [profileID, setProfileID] = useState();
@@ -17,33 +20,12 @@ const ProfileEdit = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   const { slug } = router.query;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleUserInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
-
-  const handleSocialLinksInputChange = (e) => {
-    setUserData({
-      ...userData,
-      redes_sociales: {
-        ...userData.redes_sociales,
-        [e.target.name]: e.target.value,
-      },
-      links: [{}],
-    });
-  };
-
-  const handleLinksInputChange = (e, index) => {
-    const { name, value } = e.target;
-
-    const linksList = [...userData.links];
-    linksList[index][name] = value;
-
-    setUserData({
-      ...userData,
-      links: linksList,
-    });
-  };
-
+  // console.log("avatar", userData?.avatar);
+  const src = userData.avatar?.url || "";
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -101,6 +83,14 @@ const ProfileEdit = () => {
     }
   };
 
+  const myLoader = ({ src }) => {
+    return src;
+  };
+
+  const openModal = (e) => {
+    e.preventDefault();
+    setIsModalOpen(true);
+  };
 
   return (
     <Layout pageName={`${slug} - Edit`}>
@@ -113,137 +103,108 @@ const ProfileEdit = () => {
         {!isLoading ? (
           <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
             <form onSubmit={handleProfileUpdate}>
+              {src === "" ? (
+                ""
+              ) : (
+                <div className="relative flex flex-col items-center justify-center w-fit mx-auto">
+                  <Image
+                    className=" border-white border-[3px] h-[200px] w-[200px] object-cover rounded-full"
+                    loader={myLoader}
+                    src={src}
+                    width={500}
+                    height={500}
+                    alt="User avatar"
+                  />
+                  <button className=" flex items-center justify-center bg-white text-black p-3 h-14 w-14 rounded-full text-sm text-center absolute bottom-0 right-0 font-bold">
+                    Edit
+                  </button>
+                </div>
+              )}
+
               <div className="mt-4">
-                <label htmlFor="text" className="block text-sm font-medium text-white">
-                  Nombre completo
-                </label>
                 <div className="flex flex-col items-start">
                   <input
                     type="text"
                     name="nombre_completo"
+                    placeholder="Name"
                     value={userData?.nombre_completo}
                     onChange={handleUserInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className=" p-3 bg-[#1a1a1a] text-white block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
                 </div>
               </div>
               <div className="mt-4">
-                <label htmlFor="sobre_mi" className="block text-sm font-medium text-white">
-                  Sobre Mí:
-                </label>
+                <div className="flex flex-col items-start">
+                  <input
+                    type="text"
+                    name="ocupacion"
+                    placeholder="Ocupacion"
+                    value={userData?.ocupacion}
+                    onChange={handleUserInputChange}
+                    className=" p-3 bg-[#1a1a1a] text-white block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </div>
+              </div>
+              <div className="mt-4">
                 <div className="flex flex-col items-start">
                   <textarea
                     name="sobre_mi"
                     rows="5"
                     cols="33"
+                    placeholder="Bio"
                     value={userData?.sobre_mi}
                     onChange={handleUserInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    className=" p-3 bg-[#1a1a1a] text-white block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   />
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <h3 className=" text-white my-3 font-bold uppercase tracking-wide">CONTACTO</h3>
+                <div className="container mx-auto p-4 bg-[#1e1e1e] rounded-lg">
+                  <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
+                    AGREGAR
+                  </button>
+
+                  <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
                 </div>
               </div>
               <div className="mt-4">
-                <label htmlFor="ocupacion" className="block text-sm font-medium text-white">
-                  Ocupacion
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="ocupacion"
-                    value={userData?.ocupacion}
-                    onChange={handleUserInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
+                <h3 className=" text-white my-3 font-bold uppercase tracking-wide">Redes sociales</h3>
+                <div className="container mx-auto p-4 bg-[#1e1e1e] rounded-lg flex flex-col gap-4">
+                  <div className="flex items-end gap-4">
+                    <div className=" w-9">
+                      <InstagramIcon />
+                    </div>
+                    <div className="flex flex-col grow gap-1">
+                      <p className="flex text-white text-[12px] gap-1">
+                        instagram
+                        <span className=" w-[18px]">
+                          <QuestionMark />
+                        </span>
+                      </p>
+                      <div className="relative">
+                        <input type="text" className="rounded-md py-1 px-2 w-full"></input>
+                        <span className="absolute w-[18px] h-[18px] rounded-full bg-[#d36a6a] text-white left-[95%] bottom-[75%] font-bold flex items-center justify-center text-[10px]">X</span>
+                      </div>
+                    </div>
+                  </div>
+                  <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
+                    AGREGAR
+                  </button>
+
+                  <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
                 </div>
               </div>
-              {/* {userData?.links.map((link, index) => (
-                <div key={index}>
-                  <div className="mt-4">
-                    <label htmlFor={`link-name-${index}`} className="block text-sm font-medium text-white">
-                      Link Name
-                    </label>
-                    <input
-                      type="text"
-                      id={`link-name-${index}`}
-                      name="name"
-                      value={link.titulo}
-                      onChange={(e) => handleLinksInputChange(e, index)}
-                      className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <label htmlFor={`link-url-${index}`} className="block text-sm font-medium text-white">
-                      Link URL
-                    </label>
-                    <input
-                      type="text"
-                      id={`link-url-${index}`}
-                      name="url"
-                      value={link.url}
-                      onChange={(e) => handleLinksInputChange(e, index)}
-                      className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    />
-                  </div>
-                </div>
-              ))} */}
               <div className="mt-4">
-                <h3 className=" text-white my-3 font-bold">Redes sociales</h3>
-                <label htmlFor="facebook" className="block text-sm font-medium text-white">
-                  Facebook
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="facebook"
-                    value={userData?.redes_sociales?.facebook || ""}
-                    onChange={handleSocialLinksInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
+                <h3 className=" text-white my-3 font-bold uppercase tracking-wide">Enlaces</h3>
+                <div className="container mx-auto p-4 bg-[#1e1e1e] rounded-lg">
+                  <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
+                    AGREGAR
+                  </button>
+
+                  <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
                 </div>
-                <label htmlFor="facebook" className="block text-sm font-medium text-white">
-                  Instagram
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="instagram"
-                    value={userData?.redes_sociales?.instagram || ""}
-                    onChange={handleSocialLinksInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-                <label htmlFor="twitter" className="block text-sm font-medium text-white">
-                  Twitter
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="twitter"
-                    value={userData?.redes_sociales?.twitter || ""}
-                    onChange={handleSocialLinksInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-                <label htmlFor="linkedin" className="block text-sm font-medium text-white">
-                  Linkedin
-                </label>
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="linkedin"
-                    value={userData?.redes_sociales?.linkedin || ""}
-                    onChange={handleSocialLinksInputChange}
-                    className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center justify-end mt-4 flex-col gap-3">
-                <button
-                  type="submit"
-                  className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-900 border border-transparent rounded-md active:bg-gray-900"
-                >
-                  Cambiar datos
-                </button>
               </div>
             </form>
           </div>
