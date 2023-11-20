@@ -1,51 +1,41 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "@/context/auth-context";
+import { AuthContext, useAuthContext } from "@/context/auth-context";
 import Layout from "@/components/Layout";
-import Logo from "../../public/images/linki-logo.png";
-import Image from "next/image";
-import Link from "next/link";
-import CreateUser from "@/components/CreateUser";
-import CreateAvatar from "@/components/CreateAvatar";
-import CreateProfile from "@/components/CreateProfile";
-import WelcomeScreen from "@/components/WelcomeScreen";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import Signup from "@/components/Signup";
+import CreateUser from "@/components/CreateUser";
+import CreateProfile from "@/components/CreateProfile";
+import CreateAvatar from "@/components/CreateAvatar";
+import Image from "next/image";
+import Logo from "../../public/images/linki-logo-black.png";
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [userId, setUserId] = useState();
-  const { userData } = useContext(AuthContext); // use AuthContext
-
-  const [profileID, setProfileID] = useState();
-  const [slug, setSlug] = useState();
-  const handleUserSubmit = (userId) => {
-    setUserId(userId);
-    handleNext();
-  };
-
-  const handleProfileSubmit = (profileID, slug) => {
-    setProfileID(profileID);
-    setSlug(slug);
-    handleNext();
-  };
+  const { userData } = useContext(AuthContext);
+  const { updateUserData } = useAuthContext();
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    setActiveStep((prevStep) => prevStep + 1);
   };
 
-  const handleImageSubmit = () => {
-    handleNext();
+  const handleBack = () => {
+    setActiveStep((prevStep) => (prevStep > 0 ? prevStep - 1 : 0));
+  };
+
+  const handleFinalSubmit = () => {
+    // Implement the final submission logic here using the userData
   };
 
   const renderStep = () => {
     switch (activeStep) {
       case 0:
-        return <WelcomeScreen onSubmit={handleUserSubmit} />;
+        return <Signup onNextStep={handleNext} />;
       case 1:
-        return <CreateUser onSubmit={handleUserSubmit} />;
+        return <CreateUser onNextStep={handleNext} onBack={handleBack} />;
       case 2:
-        return <CreateProfile onSubmit={handleProfileSubmit} userId={userId} />;
+        return <CreateProfile onNextStep={handleNext} onBack={handleBack} />;
       case 3:
-        return <CreateAvatar onSubmit={handleImageSubmit} perfilId={profileID} slug={slug} />;
+        return <CreateAvatar onFinalSubmit={handleFinalSubmit} onBack={handleBack} />;
       default:
         return <div />;
     }
@@ -53,20 +43,14 @@ const SignUp = () => {
 
   return (
     <Layout pageName="Sign up">
-      <>
-        <div className=" bg-black flex flex-col items-center pt-6 sm:justify-center sm:pt-0">
-          <div className=" w-[125px]">
-            <Link href="/">
-              <Image src={Logo} alt="Linki logo"/>
-            </Link>
-          </div>
-        </div>
-        <TransitionGroup>
-          <CSSTransition key={activeStep} timeout={500} classNames="fade">
-            {renderStep()}
-          </CSSTransition>
-        </TransitionGroup>
-      </>
+      <div className="mx-auto mb-3">
+        <Image src={Logo} alt="linki logo" width={100} />
+      </div>
+      {/* <TransitionGroup> */}
+      {/* <CSSTransition key={activeStep} timeout={500} classNames="fade"> */}
+      {renderStep()}
+      {/* </CSSTransition> */}
+      {/* </TransitionGroup> */}
     </Layout>
   );
 };

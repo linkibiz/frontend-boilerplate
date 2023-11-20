@@ -13,6 +13,7 @@ import Wrapper from "@/components/Wrapper";
 import { useRouter } from "next/router";
 import React from "react";
 import LoadingComponent from "@/components/LoadingComponent";
+import Link from "next/link";
 const Perfil = ({ data }) => {
   const router = useRouter();
   const { slug } = router.query;
@@ -31,6 +32,9 @@ const Perfil = ({ data }) => {
           {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
           {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
           {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
+          <Link href="/login" className=" text-center text-red-500 m-auto">
+            Editar Perfil          
+          </Link>
         </Wrapper>
       </LoadingComponent>
 

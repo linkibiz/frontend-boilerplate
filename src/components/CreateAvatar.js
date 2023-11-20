@@ -12,6 +12,8 @@ const CreateAvatar = ({ onSubmit, perfilId, slug }) => {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  console.log(selectedImage)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

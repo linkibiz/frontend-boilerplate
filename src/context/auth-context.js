@@ -30,7 +30,6 @@ export const AuthContext = createContext({
     vcard: {
       nombre: "",
       apellido: "",
-      ocupacion: "",
       email: "",
       celular: "",
       website: "",
@@ -75,7 +74,6 @@ const AuthContextProvider = ({ children }) => {
     vcard: {
       nombre: "",
       apellido: "",
-      ocupacion: "",
       email: "",
       celular: "",
       website: "",
@@ -85,6 +83,11 @@ const AuthContextProvider = ({ children }) => {
     },
   });
 
+  // Define updateUserData function inside the provider
+  const updateUserData = (newData) => {
+    setUserData((currentData) => ({ ...currentData, ...newData }));
+  };
+
   const contextValue = {
     isLoading,
     setIsLoading,
@@ -92,6 +95,7 @@ const AuthContextProvider = ({ children }) => {
     setError,
     userData,
     setUserData,
+    updateUserData,
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

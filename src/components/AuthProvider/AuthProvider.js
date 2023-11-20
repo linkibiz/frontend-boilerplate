@@ -25,16 +25,15 @@ const AuthProvider = ({ children }) => {
       tiktok: "",
       youtube: "",
       whatsapp: "",
-      email: ""
+      email: "",
     },
-    links: [
-    ],
+    links: [],
     botones: [],
     ocupacion: "",
     vcard: {
       nombre: "",
       apellido: "",
-      ocupacion: "",
+      // ocupacion: "",
       email: "",
       celular: "",
       website: "",
@@ -48,6 +47,10 @@ const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const authToken = getToken();
+
+  const updateUserData = (newData) => {
+    setUserData((currentData) => ({ ...currentData, ...newData }));
+  };
 
   const fetchLoggedInUser = async (token) => {
     setIsLoading(true);
@@ -82,7 +85,7 @@ const AuthProvider = ({ children }) => {
           tiktok: profile?.redes_sociales.tiktok || "",
           youtube: profile?.redes_sociales.youtube || "",
           whatsapp: profile?.redes_sociales.whatsapp || "",
-          email: profile?.redes_sociales.email || ""
+          email: profile?.redes_sociales.email || "",
         },
         ocupacion: profile?.ocupacion,
         links: profile?.links || [],
@@ -90,14 +93,14 @@ const AuthProvider = ({ children }) => {
         vcard: {
           nombre: "",
           apellido: "",
-          ocupacion: "",
+          // ocupacion: "",
           email: "",
           celular: "",
           website: "",
           telefono_casa: "",
           telefono_trabajo: "",
-          email_trabajo: ""
-        }
+          email_trabajo: "",
+        },
       });
     } catch (error) {
       console.error(error);
@@ -113,7 +116,11 @@ const AuthProvider = ({ children }) => {
     }
   }, [authToken]);
 
-  return <AuthContext.Provider value={{ userData, setUserData, isLoading, setIsLoading, error }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ updateUserData, userData, setUserData, isLoading, setIsLoading, error }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;
