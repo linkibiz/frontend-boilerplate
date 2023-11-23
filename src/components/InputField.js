@@ -1,5 +1,5 @@
 const InputField = ({ placeholder,label, name, type, value, onChange, errorMessage, showLabel = false, ...props }) => (
-  <div className="mt-4">
+  <div className="">
     {showLabel && (
       <label htmlFor={name} className="block text-sm font-medium text-white">
         {label}
@@ -15,7 +15,7 @@ const InputField = ({ placeholder,label, name, type, value, onChange, errorMessa
         onChange={onChange}
         placeholder={placeholder}
         required
-        className="p-3 bg-[#F3F4F6] text-black block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        className="p-3 bg-[#F3F4F6] text-black block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         {...props}
       />
       {errorMessage && <div className="text-red-500 mt-1">{errorMessage}</div>}

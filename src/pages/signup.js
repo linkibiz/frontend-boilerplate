@@ -8,11 +8,15 @@ import CreateProfile from "@/components/CreateProfile";
 import CreateAvatar from "@/components/CreateAvatar";
 import Image from "next/image";
 import Logo from "../../public/images/linki-logo-black.png";
+import Congratulations from "@/components/Congratulations";
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [userId, setUserId] = useState();
   const { userData } = useContext(AuthContext);
   const { updateUserData } = useAuthContext();
+  const [profileID, setProfileID] = useState();
+  const [slug, setSlug] = useState();
 
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
@@ -22,20 +26,21 @@ const SignUp = () => {
     setActiveStep((prevStep) => (prevStep > 0 ? prevStep - 1 : 0));
   };
 
-  const handleFinalSubmit = () => {
-    // Implement the final submission logic here using the userData
+  const handleProfileSubmit = (slug) => {
+    setSlug(slug);
   };
+
 
   const renderStep = () => {
     switch (activeStep) {
       case 0:
-        return <Signup onNextStep={handleNext} />;
+        return <Signup onNextStep={handleNext} onSubmit={setUserId}/>;
       case 1:
-        return <CreateUser onNextStep={handleNext} onBack={handleBack} />;
+        return <CreateUser onNextStep={handleNext} onBack={handleBack} userId={userId} onSubmit={handleProfileSubmit}/>;
       case 2:
-        return <CreateProfile onNextStep={handleNext} onBack={handleBack} />;
-      case 3:
-        return <CreateAvatar onFinalSubmit={handleFinalSubmit} onBack={handleBack} />;
+        return <Congratulations slug={slug}/>;
+      // case 3:
+      //   return <CreateAvatar onFinalSubmit={handleFinalSubmit} onBack={handleBack} />;
       default:
         return <div />;
     }

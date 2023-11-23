@@ -88,6 +88,7 @@ const AuthContextProvider = ({ children }) => {
     setUserData((currentData) => ({ ...currentData, ...newData }));
   };
 
+
   const contextValue = {
     isLoading,
     setIsLoading,
@@ -96,6 +97,7 @@ const AuthContextProvider = ({ children }) => {
     userData,
     setUserData,
     updateUserData,
+    updateVCardWithUserInfo
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { AuthContext } from "@/context/auth-context";
 import { API, BEARER } from "@/utils/constant";
 import { useEffect } from "react";
@@ -51,6 +51,23 @@ const AuthProvider = ({ children }) => {
   const updateUserData = (newData) => {
     setUserData((currentData) => ({ ...currentData, ...newData }));
   };
+
+  const updateVCardWithUserInfo = useCallback(() => {
+    const fullNameParts = userData.nombre_completo.split(' ');
+    const firstName = fullNameParts[0];
+    const lastName = fullNameParts.length > 1 ? fullNameParts.slice(1).join(' ') : '';
+  
+    setUserData(currentData => ({
+      ...currentData,
+      vcard: {
+        ...currentData.vcard,
+        nombre: firstName,
+        apellido: lastName,
+        email: currentData.email
+      }
+    }));
+  }, [userData.nombre_completo, setUserData]);
+  
 
   const fetchLoggedInUser = async (token) => {
     setIsLoading(true);
@@ -117,7 +134,7 @@ const AuthProvider = ({ children }) => {
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ updateUserData, userData, setUserData, isLoading, setIsLoading, error }}>
+    <AuthContext.Provider value={{ updateVCardWithUserInfo,updateUserData, userData, setUserData, isLoading, setIsLoading, error }}>
       {children}
     </AuthContext.Provider>
   );
