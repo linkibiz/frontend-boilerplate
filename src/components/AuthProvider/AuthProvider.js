@@ -6,7 +6,7 @@ import { getToken } from "@/utils/helpers";
 import axios from "axios";
 
 const AuthProvider = ({ children }) => {
-  const [userData, setUserData] = useState({
+  const initialUserData = {
     username: "",
     email: "",
     password: "",
@@ -28,7 +28,12 @@ const AuthProvider = ({ children }) => {
       email: "",
     },
     links: [],
-    botones: [],
+    contact_buttons: {
+      email: "",
+      phone: "",
+      whatsapp: "",
+      website: "",
+    },
     ocupacion: "",
     vcard: {
       nombre: "",
@@ -41,87 +46,116 @@ const AuthProvider = ({ children }) => {
       telefono_trabajo: "",
       email_trabajo: "",
     },
-  });
+  };
+
+  const [userData, setUserData] = useState(initialUserData);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const authToken = getToken();
 
+  useEffect(() => {
+    const isSignupFlow = window.location.pathname.includes("/signup");
+    // Only set userData from localStorage if we are not in the signup flow
+    if (!isSignupFlow) {
+      const storedUserData = localStorage.getItem("userData");
+      if (storedUserData) {
+        setUserData(JSON.parse(storedUserData));
+      }
+    }
+  }, []);
+
+  // Effect to store user data in localStorage when userData changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("userData", JSON.stringify(userData));
+    }
+  }, [userData]);
+
   const updateUserData = (newData) => {
     setUserData((currentData) => ({ ...currentData, ...newData }));
   };
 
   const updateVCardWithUserInfo = useCallback(() => {
-    const fullNameParts = userData.nombre_completo.split(' ');
+    const fullNameParts = userData.nombre_completo.split(" ");
     const firstName = fullNameParts[0];
-    const lastName = fullNameParts.length > 1 ? fullNameParts.slice(1).join(' ') : '';
-  
-    setUserData(currentData => ({
+    const lastName = fullNameParts.length > 1 ? fullNameParts.slice(1).join(" ") : "";
+
+    setUserData((currentData) => ({
       ...currentData,
       vcard: {
         ...currentData.vcard,
         nombre: firstName,
         apellido: lastName,
-        email: currentData.email
-      }
+        email: currentData.email,
+      },
     }));
   }, [userData.nombre_completo, setUserData]);
-  
 
   const fetchLoggedInUser = async (token) => {
+    if (!token) {
+      setError("No authentication token found.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await axios.get(`${API}/users/me?populate=deep`, {
         headers: { Authorization: `${BEARER} ${token}` },
       });
 
-      const data = response.data;
-      const profile = response.data.user;
+      const { username, email, id, user: profile } = response.data;
+
+      // Default values can be provided directly in the destructuring.
+      const redes_sociales = {
+        facebook: "",
+        linkedin: "",
+        twitter: "",
+        instagram: "",
+        website: "",
+        tiktok: "",
+        youtube: "",
+        whatsapp: "",
+        email: "",
+        ...profile.redes_sociales,
+      };
+
+      const contact_buttons = {
+        email: "",
+        phone: "",
+        whatsapp: "",
+        website: "",
+        ...profile.contact_buttons,
+      };
+
       setUserData({
-        username: data.username,
-        email: data.email,
-        slug: data.username,
-        id: data.id,
-        nombre_completo: data?.nombre_completo,
+        username,
+        email,
+        slug: username,
+        id,
+        nombre_completo: profile?.nombre_completo || "",
         sobre_mi: profile?.sobre_mi || "",
-        avatar: {
-          ...profile?.avatar,
-          url: profile?.avatar.url,
-        },
-        // banner: {
-        //   ...profile?.banner,
-        //   url: profile?.banner.url
-        // },
-        redes_sociales: {
-          facebook: profile?.redes_sociales.facebook || "",
-          linkedin: profile?.redes_sociales.linkedin || "",
-          twitter: profile?.redes_sociales.twitter || "",
-          instagram: profile?.redes_sociales.instagram || "",
-          website: profile?.redes_sociales.website || "",
-          tiktok: profile?.redes_sociales.tiktok || "",
-          youtube: profile?.redes_sociales.youtube || "",
-          whatsapp: profile?.redes_sociales.whatsapp || "",
-          email: profile?.redes_sociales.email || "",
-        },
-        ocupacion: profile?.ocupacion,
+        avatar: profile?.avatar?.url || "",
+        redes_sociales,
+        ocupacion: profile?.ocupacion || "",
         links: profile?.links || [],
+        contact_buttons,
         botones: profile?.botones || [],
         vcard: {
-          nombre: "",
-          apellido: "",
-          // ocupacion: "",
-          email: "",
-          celular: "",
-          website: "",
-          telefono_casa: "",
-          telefono_trabajo: "",
-          email_trabajo: "",
+          nombre: profile?.vcard?.nombre || "",
+          apellido: profile?.vcard?.apellido || "",
+          email: profile?.vcard?.email || "",
+          celular: profile?.vcard?.celular || "",
+          website: profile?.vcard?.website || "",
+          telefono_casa: profile?.vcard?.telefono_casa || "",
+          telefono_trabajo: profile?.vcard?.telefono_trabajo || "",
+          email_trabajo: profile?.vcard?.email_trabajo || "",
         },
       });
     } catch (error) {
-      console.error(error);
-      setError("Error While Getting Logged In User Details");
+      console.error("Error fetching logged-in user details:", error);
+      setError("Unable to load user details. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -134,7 +168,7 @@ const AuthProvider = ({ children }) => {
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ updateVCardWithUserInfo,updateUserData, userData, setUserData, isLoading, setIsLoading, error }}>
+    <AuthContext.Provider value={{ updateVCardWithUserInfo, updateUserData, userData, setUserData, isLoading, setIsLoading, error }}>
       {children}
     </AuthContext.Provider>
   );

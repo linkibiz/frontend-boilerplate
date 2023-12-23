@@ -14,13 +14,16 @@ import { useRouter } from "next/router";
 import React from "react";
 import LoadingComponent from "@/components/LoadingComponent";
 import Link from "next/link";
+import HomeLayout from "@/components/HomeLayout";
+import BrushIcon from "@/components/Icons/BrushIcon";
 const Perfil = ({ data }) => {
   const router = useRouter();
   const { slug } = router.query;
+
   return (
-    <Layout pageName={slug}>
+    <HomeLayout pageName={slug}>
       <LoadingComponent>
-        <Banner /> 
+        <Banner />
         <Wrapper>
           <Navbar />
           <Profile profileData={data} />
@@ -28,18 +31,15 @@ const Perfil = ({ data }) => {
             <QrImage value={slug} />
             {data.attributes.vcard != null && <Vcard vcardData={data} />}
           </div>
-          {data.attributes.botones.length > 0 && <ContactButtons contactButtons={data.attributes.botones} />}
+          {data.attributes.contact_buttons && <ContactButtons contactButtons={data.attributes.contact_buttons} />}
           {data.attributes.sobre_mi != "" && <About info={data.attributes.sobre_mi} />}
           {data.attributes.redes_sociales != null && <SocialLinks socialLinks={data.attributes.redes_sociales} />}
           {data.attributes.links.length > 0 && <Links linksList={data.attributes.links} />}
-          <Link href="/login" className=" text-center text-red-500 m-auto">
-            Editar Perfil          
-          </Link>
         </Wrapper>
       </LoadingComponent>
 
       {/* <Footer/> */}
-    </Layout>
+    </HomeLayout>
   );
 };
 

@@ -10,9 +10,9 @@ const Links = ({ linksList }) => {
           {linksList.map((link) => (
             <div key={link.id}>
               <Link
-                href={`https://${link.url}`}
+                href={`${link.url}`}
                 target="_blank"
-                className="w-full tracking-[0.2em] p-[15px] font-bold text-left bg-white rounded-xl text-black uppercase text-xs flex items-center justify-between"
+                className="w-full tracking-[0.2em] p-[15px] font-bold text-left bg-[#ECEDED] rounded-xl text-black uppercase text-xs flex items-center justify-between"
               >
                 <h3 className=" text-center grow">{link.titulo}</h3>
               </Link>

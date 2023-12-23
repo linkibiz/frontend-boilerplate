@@ -1,13 +1,12 @@
-import { useRef, useState, useEffect } from "react";
-import axios from "axios";
 import { useAuthContext } from "@/context/auth-context";
-import { setToken } from "@/utils/helpers";
-import LoadingSpinner from "./LoadingSpinner";
-import InputField from "./InputField";
-import SignUpHeading from "./SignUpHeading";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import BackArrow from "./Icons/BackArrow";
 import ProfileRounded from "./Icons/ProfileRounded";
-import Image from "next/image";
+import InputField from "./InputField";
+import LoadingSpinner from "./LoadingSpinner";
+import SignUpHeading from "./SignUpHeading";
 
 const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
   const { updateUserData, userData, updateVCardWithUserInfo, setUserData } = useAuthContext();
@@ -16,13 +15,13 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState();
   const [currentStep, setCurrentStep] = useState(0);
+  const [settingAvatar, setSettingAvatar] = useState(false);
   const [error, setError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [countryCode, setCountryCode] = useState("507");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [userProfileId, setUserProfileId] = useState();
-  console.log(userData);
+  const [isInputValid, setIsInputValid] = useState(false);
+
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
@@ -54,58 +53,54 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
   };
 
   useEffect(() => {
-    updateVCardWithUserInfo();
-  }, [updateVCardWithUserInfo]);
+    if (userData.nombre_completo) {
+      updateVCardWithUserInfo();
+    }
+  }, [updateVCardWithUserInfo, userData.nombre_completo]);
 
   const triggerFileSelectPopup = () => fileInputRef.current.click();
-
-  const isValidUsername = (username) => {
-    return !/[@\s]/.test(username);
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Check if the field belongs to the 'vcard' object
-    if (name in userData.vcard) {
+    // Ensure userData and userData.vcard are defined before using them
+    if (userData && userData.vcard && name in userData.vcard) {
       updateUserData({
         vcard: {
           ...userData.vcard,
           [name]: value,
         },
       });
-    } else {
-      updateUserData({ [name]: value });
+    } else if (userData) {
+      updateUserData({ ...userData, [name]: value });
     }
+
+    const inputName = e.target.name;
+    const inputValue = e.target.value;
+    if (inputName === "nombre_completo") {
+      setIsInputValid(inputValue.trim().length > 0);
+    }
+    console.log(isInputValid);
   };
 
   const handleNext = () => {
     if (currentStep < 3) {
-      // Assuming there are 3 steps (0, 1, 2)
       setCurrentStep(currentStep + 1);
     } else {
-      onNextStep(); // Move to the next major step or finalize the signup process
+      onNextStep();
     }
   };
 
   const handleBack = () => {
     if (currentStep === 0) {
-      onBack(); // Go back to the Signup step
+      onBack();
     } else {
-      setCurrentStep(currentStep - 1); // Go back to the previous step within CreateUser
-    }
-  };
-
-  const validateUsernameOnInput = (username) => {
-    if (!isValidUsername(username)) {
-      setUsernameError("El nombre de usuario no debe contener espacios en blanco ni el símbolo '@'");
-    } else {
-      setUsernameError(""); // clear the error if username becomes valid
+      setCurrentStep(currentStep - 1);
     }
   };
 
   const generateUpdatedUserData = (userData) => {
-    const { redes_sociales, ocupacion, vcard, links, email, nombre_completo, username } = userData;
+    const { ocupacion, vcard, email, username } = userData;
 
     const updatedUserData = {
       ...userData,
@@ -129,7 +124,6 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
     e.preventDefault();
     try {
       const updatedUserData = generateUpdatedUserData(userData);
-      console.log(updateUserData);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });
 
       if (response.status !== 200) {
@@ -149,6 +143,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
   };
   const handleImageSubmit = async (e) => {
     e.preventDefault();
+    setSettingAvatar(true);
     try {
       if (selectedImage) {
         const formData = new FormData();
@@ -160,10 +155,14 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
         if (response.status !== 200) {
           throw new Error(response.data.message);
         }
+        updateUserData({ ...userData, avatar: response.data[0].url });
+        console.log("response", response);
       }
       onNextStep();
     } catch (error) {
       console.error("Error uploading image:", error.message);
+    } finally {
+      setSettingAvatar(false);
     }
   };
 
@@ -177,11 +176,17 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
               label="What's your name?"
               name="nombre_completo"
               type="text"
-              value={userData.nombre_completo || ""}
+              value={userData?.nombre_completo || ""}
               onChange={handleInputChange}
               placeholder="John Doe"
             />
-            <button className="mt-5 py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center" onClick={handleNext}>
+            <button
+              className={`mt-5 py-4 px-5 w-full text-white rounded-lg font-bold text-center ${
+                !isInputValid ? "bg-[#303030]" : "bg-[#000]"
+              }`}
+              disabled={!isInputValid}
+              onClick={handleNext}
+            >
               Continuar
             </button>
           </>
@@ -198,7 +203,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
               label="Company info?"
               name="ocupacion"
               type="text"
-              value={userData.ocupacion || ""}
+              value={userData?.ocupacion || ""}
               onChange={handleInputChange}
             />
             <button className="mt-5 py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center" onClick={handleNext}>
@@ -905,7 +910,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
                 )}
               </div>
               <button type="submit" className="mt-5 py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center">
-                Continuar
+                {settingAvatar ? <LoadingSpinner /> : "Continuar"}
               </button>
             </form>
           </>
@@ -919,7 +924,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
     // Aquí va tu formulario de registro de usuario
     <>
       <div className="h-4 w-4" onClick={handleBack}>
-        <BackArrow />
+        {currentStep != 0 && <BackArrow />}
       </div>
       <div className="mt-4">{renderStepContent()}</div>
     </>

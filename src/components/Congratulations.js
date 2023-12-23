@@ -1,11 +1,13 @@
+import { useAuthContext } from "@/context/auth-context";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
 
 const Congratulations = ({ slug }) => {
   const [isExploding, setIsExploding] = useState(true);
+  const { userData } = useAuthContext();
   const router = useRouter();
-  console.log("slug", slug);
+  console.log("congrats component", userData);
   return (
     <div>
       {isExploding && (

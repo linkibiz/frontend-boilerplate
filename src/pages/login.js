@@ -1,17 +1,21 @@
 import { useState } from "react";
 import axios from "axios";
 import Layout from "@/components/Layout";
-import Logo from "../../public/images/linki-logo.png";
+import Logo from "../../public/images/linki-logo-black.png";
 import Image from "next/image";
 import Link from "next/link";
 import { setToken } from "@/utils/helpers";
 import { useAuthContext } from "@/context/auth-context";
 import { API } from "@/utils/constant";
 import { useRouter } from "next/router";
+import BackArrow from "@/components/Icons/BackArrow";
+import SignUpHeading from "@/components/SignUpHeading";
+import InputField from "@/components/InputField";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Login = () => {
-  const {userData, setUserData } = useAuthContext();
-  const router = useRouter()
+  const { userData, setUserData } = useAuthContext();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState("");
@@ -24,9 +28,10 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API}/auth/local`, userData)
+      const response = await axios.post(`${API}/auth/local`, userData);
 
       const data = response.data;
+      console.log(data);
       if (data?.error) {
         throw data?.error;
       } else {
@@ -34,8 +39,11 @@ const Login = () => {
         setToken(data.jwt);
 
         // set the user
+        console.log("data user", data.user);
         setUserData(data.user);
-        const url = data.user.username
+
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        const url = data.user.username;
         router.push(`/${url}/profile/edit`);
       }
     } catch (error) {
@@ -44,60 +52,26 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
-    
   };
 
   return (
-    <Layout pageName="Log in">
-      <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
-        <div className=" w-[200px]">
-          <Link href="/">
-            <Image src={Logo} />
-          </Link>
+    <Layout pageName={"Log in"}>
+      <div className="mx-auto mb-3">
+        <Image src={Logo} alt="linki logo" width={100} />
+      </div>
+      <div className="bg-white flex flex-col gap-3">
+        <div className="h-4 w-4">
+          <BackArrow />
         </div>
-        <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
-          <form onSubmit={handleSubmit}>
-            <div className="mt-4">
-              <label htmlFor="email" className="block text-sm font-medium text-white">
-                Email
-              </label>
-              <div className="flex flex-col items-start">
-                <input
-                  type="email"
-                  name="identifier"
-                  value={userData.identifier}
-                  onChange={handleUserInputChange}
-                  className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              </div>
-            </div>
-            <div className="mt-4">
-              <label htmlFor="password" className="block text-sm font-medium text-white">
-                Password
-              </label>
-              <div className="flex flex-col items-start">
-                <input
-                  type="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleUserInputChange}
-                  className=" p-1 block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              </div>
-            </div>
-            <div className="flex items-center justify-end mt-4 flex-col gap-3">
-              <Link className="text-sm text-white underline hover:text-gray-900" href="/signup">
-                Create your account
-              </Link>
-              <button
-                type="submit"
-                className="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-900 border border-transparent rounded-md active:bg-gray-900"
-              >
-                Login
-              </button>
-            </div>
-          </form>
-        </div>
+        <SignUpHeading title="Log in" subtitle="Ingrese su email y contraseña en los siguientes campos" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <InputField placeholder="Email" name="identifier" type="email" value={userData.identifier} onChange={handleUserInputChange} />
+          <InputField name="password" placeholder="Password" type="password" value={userData.password} onChange={handleUserInputChange} />
+          <button type="submit" disabled={isLoading} className="mt-5 py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center">
+            {isLoading ? <LoadingSpinner /> : "Continuar"}
+          </button>
+        </form>
+        {error && <div className="text-red-500 mt-2">{error}</div>}
       </div>
     </Layout>
   );

@@ -1,55 +1,55 @@
-import Link from "next/link";
-import React from "react";
-import Email from "./Icons/Email";
-import Phone from "./Icons/Phone";
-import Location from "./Icons/Location";
+import EmailIcon from "./Icons/EmailIcon";
+import PhoneIcon from "./Icons/PhoneIcon";
 import WebsiteIcon from "./Icons/WebsiteIcon";
-import RightArrowIcon from "./Icons/RightArrowIcon";
-import WhatsAppIcon from "./Icons/WhatsAppIcon";
+import Whatsapp from "./Icons/Whatsapp";
 
 const contactIcons = [
   {
     iconType: "Correo",
-    icon: <Email />,
+    icon: <EmailIcon />,
     id: 1,
+    key: "email", 
   },
   {
     iconType: "Llamar",
-    icon: <Phone />,
+    icon: <PhoneIcon />,
     id: 2,
+    key: "phone",
   },
   {
     iconType: "Whatsapp",
-    icon: <WhatsAppIcon />,
+    icon: <Whatsapp />,
     id: 3,
+    key: "whatsapp",
   },
   {
     iconType: "Website",
     icon: <WebsiteIcon />,
     id: 4,
+    key: "website",
   },
 ];
 
 const ContactButtons = ({ contactButtons }) => {
-  // const contactButtons = contactData.attributes.botones;
   return (
     <div className="flex gap-10 justify-center items-center w-full">
-      {contactIcons.map(({ iconType, icon, id }) => {
-        const dataItem = contactButtons.find((item) => item.titulo_de_boton === iconType);
+      {contactIcons.map(({ iconType, icon, id, key }) => {
+        const url = contactButtons[key];
         const ref =
-          dataItem?.titulo_de_boton === "Correo"
-            ? `mailto:${dataItem.url}`
-            : dataItem?.titulo_de_boton === "Llamar"
-            ? `tel:${dataItem.url}`
-            : dataItem?.titulo_de_boton === "Whatsapp"
-            ? `https://wa.me/${dataItem.url?.split(" ").join("")}`
-            : dataItem?.url;
-        return dataItem && dataItem.url ? (
+          key === "email"
+            ? `mailto:${url}`
+            : key === "phone"
+            ? `tel:${url}`
+            : key === "whatsapp"
+            ? `https://wa.me/${url?.split(" ").join("")}`
+            : url;
+
+        return url ? (
           <div className="flex flex-col items-center gap-2">
-            <Link href={ref} className="h-14 w-14 bg-[#222222] p-4 rounded-full" target="blank">
+            <a href={ref} className="h-14 w-14" target="_blank" rel="noopener noreferrer">
               {icon}
-            </Link>
-            <p className="font-bold text-sm">{dataItem.titulo_de_boton}</p>
+            </a>
+            <p className="font-bold text-sm">{iconType}</p>
           </div>
         ) : null;
       })}

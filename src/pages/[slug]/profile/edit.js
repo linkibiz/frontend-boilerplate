@@ -1,5 +1,18 @@
-import EditSocialsModal from "@/components/EditSocialsModal";
-import Layout from "@/components/Layout";
+import ContactIconsModal from "@/components/ContactIconsModal";
+import EmailIcon from "@/components/Icons/EmailIcon";
+import FacebookIcon from "@/components/Icons/FacebookIcon";
+import InstagramIcon from "@/components/Icons/InstagramIcon";
+import LinkedinIcon from "@/components/Icons/LinkedinIcon";
+import PhoneIcon from "@/components/Icons/PhoneIcon";
+import TikTokIcon from "@/components/Icons/TikTokIcon";
+import TwitterX from "@/components/Icons/TwitterX";
+import WebsiteIcon from "@/components/Icons/WebsiteIcon";
+import Whatsapp from "@/components/Icons/Whatsapp";
+import YoutubeIcon from "@/components/Icons/YoutubeIcon";
+import IconsModal from "@/components/IconsModal";
+import InputField from "@/components/InputField";
+import LinkModal from "@/components/LinkModal";
+import SocialLinkInput from "@/components/SocialLinkInput";
 import withAuth from "@/components/withAuth";
 import { useAuthContext } from "@/context/auth-context";
 import { API } from "@/utils/constant";
@@ -8,73 +21,280 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import Logo from "../../../../public/images/linki-logo.png";
-import InstagramIcon from "@/components/Icons/InstagramIcon";
-import QuestionMark from "@/components/Icons/QuestionMark";
+import { useEffect, useRef, useState } from "react";
+import BlackLogo from "../../../../public/images/linki-logo-black.png";
+import ProfileRounded from "@/components/Icons/ProfileRounded";
+import { fetchLoggedInUser } from "@/utils/fetchUser";
+
+const socialLinks = [
+  { name: "instagram", icon: InstagramIcon, placeholder: "john.doe" },
+  { name: "facebook", icon: FacebookIcon, placeholder: "john.doe" },
+  { name: "youtube", icon: YoutubeIcon, placeholder: "john.doe" },
+  { name: "tiktok", icon: TikTokIcon, placeholder: "john.doe" },
+  { name: "twitter", icon: TwitterX, placeholder: "john.doe" },
+  { name: "linkedin", icon: LinkedinIcon, placeholder: "john.doe" },
+];
+
+const contactLinks = [
+  { name: "whatsapp", icon: Whatsapp, placeholder: "6262-6262" },
+  { name: "phone", icon: PhoneIcon, placeholder: "6262-6262" },
+  { name: "email", icon: EmailIcon, placeholder: "john.doe@gmail.com" },
+  { name: "website", icon: WebsiteIcon, placeholder: "www.linkibiz.com" },
+];
 
 const ProfileEdit = () => {
   const [profileID, setProfileID] = useState();
   const [isLoading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState();
   const { userData, setUserData } = useAuthContext();
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [selectedContactIcon, setSelectedContactIcon] = useState(null);
   const [error, setError] = useState("");
+  const [socialMediaModalOpen, setSocialMediaModalOpen] = useState(false);
+  const [contactInfoModalOpen, setContactInfoModalOpen] = useState(false);
   const router = useRouter();
   const { slug } = router.query;
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [links, setLinks] = useState([]);
+  const [activeLinkIndex, setActiveLinkIndex] = useState(null);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState();
+  const [previewUrl, setPreviewUrl] = useState();
+  const fileInputRef = useRef(null);
+
+  // If there is an existing avatar, set it as the preview URL
+  useEffect(() => {
+    if (userData.avatar) {
+      setPreviewUrl(userData.avatar);
+    }
+  }, [userData.avatar]);
+
+  useEffect(() => {
+    if (userData && userData.links) {
+      setLinks(userData.links);
+    }
+  }, [userData.links]); // Only depend on userData.links
+
   const handleUserInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
-  // console.log("avatar", userData?.avatar);
-  const src = userData.avatar?.url || "";
+
+  const src = userData.avatar || "";
+
+  const handleSocialLinksInputChange = (value, platformName) => {
+    setUserData({
+      ...userData,
+      redes_sociales: {
+        ...userData.redes_sociales,
+        [platformName]: value,
+      },
+    });
+  };
+
+  const handleContactLinksInputChange = (value, platformName) => {
+    setUserData({
+      ...userData,
+      contact_buttons: {
+        ...userData.contact_buttons,
+        [platformName]: value,
+      },
+    });
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
+    // Function to check the slug and fetch profile data
+    const checkSlugAndFetchProfile = async () => {
+      if (!slug) return;
+
+      const authToken = getToken();
+      if (!authToken) {
+        router.push("/login");
+        return;
+      }
+
+      // Fetching user data if not available
+      if (!userData || !userData.id) {
+        try {
+          await fetchLoggedInUser(authToken);
+        } catch (error) {
+          router.push("/login");
+          return;
+        }
+      }
+
+      // Check if the slug in the URL matches the logged-in user's username
+      if (userData.slug !== slug) {
+        router.push(`/${userData.slug}/profile/edit`);
+        return;
+      }
+
+      // Fetch profile data
+      await fetchProfileData();
+    };
+
+    checkSlugAndFetchProfile();
+  }, [slug, router]); // Only re-run when slug or router changes
+
+  useEffect(() => {
+    // Return early if slug is undefined
+    if (!slug) return;
+
+    const authToken = getToken();
+    if (!authToken) {
+      router.push("/login");
+      return;
+    }
+
+    const fetchProfileData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`);
-        if (response.data.data[0].id !== userData.id) {
-          router.push(`/${userData.username}`);
-        } else {
+        const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        if (response.data && response.data.data.length > 0) {
+          setProfileData(response.data.data[0]);
           setProfileID(response.data.data[0].id);
-          setLoading(false);
+        } else {
+          setError("Profile not found");
+          router.push("/");
         }
       } catch (error) {
         console.error(`Error fetching user: ${error.message}`);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (userData.id) {
-      fetchUser();
-    }
-  }, [userData.id, slug, router, userData.username]);
+    // Fetching user data if not available
+    if (!userData || !userData.id) {
+      fetchLoggedInUser(authToken)
+        .then(() => {
+          // Check if the slug in the URL matches the logged-in user's username
+          if (userData.slug !== slug) {
+            router.push(`/${userData.slug}/profile/edit`);
+            return;
+          }
 
-  const handleProfileUpdate = async (e) => {
-    e.preventDefault();
+          // Fetch profile data
+          fetchProfileData();
+        })
+        .catch(() => {
+          router.push("/login");
+        });
+    } else {
+      // Check if the slug in the URL matches the logged-in user's username
+      if (userData.slug !== slug) {
+        router.push(`/${userData.slug}/profile/edit`);
+        return;
+      }
+
+      // Fetch profile data
+      fetchProfileData();
+    }
+  }, [slug]); // Only slug in dependency array
+
+  const fetchProfileData = async () => {
     try {
       setLoading(true);
+      console.log("Fetching profile data for slug:", slug); // Log the slug
+      const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      console.log("API response:", response); // Log the response
+      if (response.data && response.data.data.length > 0) {
+        setProfileData(response.data.data[0]);
+      } else {
+        setError("Profile not found");
+        console.log("profile not found");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(`Error fetching user: ${error.message}`);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAvatarUpdate = async () => {
+    try {
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append("files", selectedImage);
+        formData.append("ref", "api::profile.profile"); // La entidad a la que se asocia la imagen
+        formData.append("refId", profileID); // The user ID to associate the image with
+        formData.append("field", "avatar");
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/upload`, formData);
+        if (response.status !== 200) {
+          throw new Error(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+    }
+  };
+
+  const handleProfileUpdate = async (e) => {
+    if (e) e.preventDefault();
+    try {
+      setLoading(true);
+      handleAvatarUpdate();
+      // Process nombre_completo
+      const [nombre, apellido] =
+        userData.nombre_completo.split(" ").length > 1 ? userData.nombre_completo.split(" ") : [userData.nombre_completo, ""]; // Default apellido to empty if not provided
+      // Filter out links with empty titulo or url
+      const validLinks = links.filter((link) => link.titulo.trim() !== "" && link.url.trim() !== "");
+      // Construct vcard object
+      const vcard = {
+        nombre,
+        apellido,
+        ocupacion: userData.ocupacion,
+        email: userData.contact_buttons.email,
+        celular: userData.contact_buttons.whatsapp,
+        website: userData.contact_buttons.website,
+      };
+
+      // Prepare updated profile data
+      const updatedProfileData = {
+        ...userData,
+        vcard,
+        links: validLinks,
+      };
+
       // Get the current state of the resource
       const getResponse = await axios.get(`${API}/profiles/${profileID}?populate=deep`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
+
       const currentData = getResponse.data.data.attributes;
-      // Merge the current state with the updates
-      const updatedData = { ...currentData, ...userData };
+
+      // Prepare data for PUT request (Use updatedProfileData)
+      const { avatar: currentAvatar, id: currentId, ...dataWithoutCurrentAvatarAndId } = currentData;
+      const { avatar: userAvatar, id: userId, ...dataWithoutUserAvatarAndId } = updatedProfileData;
+
+      const updatedData = { ...dataWithoutCurrentAvatarAndId, ...dataWithoutUserAvatarAndId };
+
       // Make the PUT request
       const putResponse = await axios.put(
         `${API}/profiles/${profileID}`,
         { data: updatedData },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${getToken()}`,
           },
         }
       );
 
       const data = putResponse.data;
-      setUserData(data);
-      router.push(`/${slug}`);
+      console.log(data);
     } catch (error) {
       console.error(error);
       setError("Error while updating profile data");
@@ -83,138 +303,266 @@ const ProfileEdit = () => {
     }
   };
 
+  const saveProfileData = async () => {
+    await handleProfileUpdate();
+    router.push(`/${userData.slug}`);
+  };
+
   const myLoader = ({ src }) => {
     return src;
   };
 
-  const openModal = (e) => {
-    e.preventDefault();
-    setIsModalOpen(true);
+  const openLinkModal = (index) => {
+    setActiveLinkIndex(index);
+    setIsLinkModalOpen(true);
+  };
+
+  const closeLinkModal = () => {
+    setIsLinkModalOpen(false); // Close the modal
+    setActiveLinkIndex(null); // Reset the active link index
+  };
+
+  const addNewLink = () => {
+    setActiveLinkIndex(null); // Indicate a new link
+    setIsLinkModalOpen(true); // Open the modal
+  };
+
+  const saveLink = (link) => {
+    console.log(link);
+    let updatedLinks = [...links];
+
+    if (activeLinkIndex !== null) {
+      updatedLinks[activeLinkIndex] = link;
+    } else {
+      updatedLinks.push(link);
+    }
+
+    // Filter out completely empty links
+    updatedLinks = updatedLinks.filter((l) => l.titulo.trim() !== "" || l.url.trim() !== "");
+
+    setLinks(updatedLinks);
+    closeLinkModal();
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      let img = e.target.files[0];
+      setSelectedImage(img);
+      setPreviewUrl(URL.createObjectURL(img));
+    }
+  };
+
+  const triggerFileSelectPopup = () => {
+    fileInputRef.current.click();
   };
 
   return (
-    <Layout pageName={`${slug} - Edit`}>
-      <div className=" bg-black flex flex-col items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
-        <div className=" w-[200px]">
-          <Link href="/">
-            <Image src={Logo} />
-          </Link>
-        </div>
+    <div className="bg-[#F3F4F6] w-[425px] flex flex-col min-h-[100vh] p-3">
+      <div className="flex flex-col px-2 py-4 items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
         {!isLoading ? (
-          <div className="w-full px-6 py-4 mt-6 overflow-hidden sm:max-w-md sm:rounded-lg">
-            <form onSubmit={handleProfileUpdate}>
-              {src === "" ? (
-                ""
-              ) : (
-                <div className="relative flex flex-col items-center justify-center w-fit mx-auto">
-                  <Image
-                    className=" border-white border-[3px] h-[200px] w-[200px] object-cover rounded-full"
-                    loader={myLoader}
-                    src={src}
-                    width={500}
-                    height={500}
-                    alt="User avatar"
-                  />
-                  <button className=" flex items-center justify-center bg-white text-black p-3 h-14 w-14 rounded-full text-sm text-center absolute bottom-0 right-0 font-bold">
-                    Edit
-                  </button>
-                </div>
-              )}
+          <>
+            <div className="w-full mb-4 text-left flex justify-between items-center">
+              <div>
+                <h3 className="">Bienvenido,</h3>
+                <h1 className="font-bold text-2xl">{userData.nombre_completo?.split(" ")[0]}</h1>
+              </div>
+              <Link href="/">
+                <Image src={BlackLogo} className="w-[125px]" alt="Linki logo" />
+              </Link>
+            </div>
 
-              <div className="mt-4">
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="nombre_completo"
-                    placeholder="Name"
-                    value={userData?.nombre_completo}
-                    onChange={handleUserInputChange}
-                    className=" p-3 bg-[#1a1a1a] text-white block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <div className="flex flex-col items-start">
-                  <input
-                    type="text"
-                    name="ocupacion"
-                    placeholder="Ocupacion"
-                    value={userData?.ocupacion}
-                    onChange={handleUserInputChange}
-                    className=" p-3 bg-[#1a1a1a] text-white block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <div className="flex flex-col items-start">
-                  <textarea
-                    name="sobre_mi"
-                    rows="5"
-                    cols="33"
-                    placeholder="Bio"
-                    value={userData?.sobre_mi}
-                    onChange={handleUserInputChange}
-                    className=" p-3 bg-[#1a1a1a] text-white block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-              </div>
+            <div className="w-full mb-[100px] rounded-lg overflow-hidden sm:max-w-md sm:rounded-lg">
+              <form className="bg-white p-4" onSubmit={handleProfileUpdate}>
+                {src === "" ? (
+                  ""
+                ) : (
+                  <>
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} style={{ display: "none" }} />
 
-              <div className="mt-4">
-                <h3 className=" text-white my-3 font-bold uppercase tracking-wide">CONTACTO</h3>
-                <div className="container mx-auto p-4 bg-[#1e1e1e] rounded-lg">
-                  <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
-                    AGREGAR
-                  </button>
-
-                  <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
-                </div>
-              </div>
-              <div className="mt-4">
-                <h3 className=" text-white my-3 font-bold uppercase tracking-wide">Redes sociales</h3>
-                <div className="container mx-auto p-4 bg-[#1e1e1e] rounded-lg flex flex-col gap-4">
-                  <div className="flex items-end gap-4">
-                    <div className=" w-9">
-                      <InstagramIcon />
-                    </div>
-                    <div className="flex flex-col grow gap-1">
-                      <p className="flex text-white text-[12px] gap-1">
-                        instagram
-                        <span className=" w-[18px]">
-                          <QuestionMark />
-                        </span>
-                      </p>
-                      <div className="relative">
-                        <input type="text" className="rounded-md py-1 px-2 w-full"></input>
-                        <span className="absolute w-[18px] h-[18px] rounded-full bg-[#d36a6a] text-white left-[95%] bottom-[75%] font-bold flex items-center justify-center text-[10px]">X</span>
+                    <div className="relative flex flex-row items-start justify-center mx-auto">
+                      <div className="flex flex-col gap-2 grow items-start justify-between">
+                        <h3 className="font-bold">Foto de perfil</h3>
+                        <span>Recomendado 300 x 300 </span>
+                        <button
+                          type="button"
+                          onClick={triggerFileSelectPopup}
+                          className="bg-white hover:bg-gray-100 text-sm text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded-lg"
+                        >
+                          Cambiar
+                        </button>
+                      </div>
+                      <div>
+                        {previewUrl ? (
+                          <img
+                            src={previewUrl}
+                            alt="Profile picture"
+                            className="border-white border-[3px] h-[125px] w-[125px] object-cover rounded-full"
+                            onClick={triggerFileSelectPopup}
+                            width={100}
+                            height={100}
+                          />
+                        ) : (
+                          // Placeholder image
+                          <div className="h-[150px]" onClick={triggerFileSelectPopup}>
+                            <ProfileRounded />
+                          </div>
+                        )}
                       </div>
                     </div>
+                  </>
+                )}
+
+                <div className="mt-4">
+                  <InputField
+                    name="nombre_completo"
+                    type="text"
+                    value={userData?.nombre_completo}
+                    onChange={handleUserInputChange}
+                    placeholder="Nombre completo"
+                    label="Nombre"
+                    showLabel
+                  />
+                </div>
+                <div className="mt-4">
+                  <InputField
+                    name="ocupacion"
+                    type="text"
+                    value={userData?.ocupacion}
+                    onChange={handleUserInputChange}
+                    placeholder="Ocupacion"
+                    label="Ocupacion"
+                    showLabel
+                  />
+                </div>
+                <div className="mt-4">
+                  <div className="flex flex-col items-start">
+                    <label htmlFor="sobre_mi" className="block text-sm font-medium text-black">
+                      Bio
+                    </label>
+                    <textarea
+                      name="sobre_mi"
+                      rows="5"
+                      cols="33"
+                      placeholder="Bio"
+                      value={userData?.sobre_mi}
+                      onChange={handleUserInputChange}
+                      className="p-3 bg-[#F3F4F6] text-black block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    />
                   </div>
-                  <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
-                    AGREGAR
-                  </button>
-
-                  <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
                 </div>
-              </div>
-              <div className="mt-4">
-                <h3 className=" text-white my-3 font-bold uppercase tracking-wide">Enlaces</h3>
-                <div className="container mx-auto p-4 bg-[#1e1e1e] rounded-lg">
-                  <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
-                    AGREGAR
-                  </button>
 
-                  <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
+                <div className="mt-4">
+                  <h3 className=" text-black my-3 font-bold uppercase tracking-wide">Informacion de contacto</h3>
+                  <div className="container mx-auto p-4 bg-[#F3F4F6] rounded-lg flex flex-col gap-4">
+                    <div className="flex gap-3 justify-between flex-wrap">
+                      {contactLinks.map((link, index) => (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setSelectedContactIcon(link);
+                            setContactInfoModalOpen(true);
+                          }}
+                        >
+                          <SocialLinkInput name={link.name} IconComponent={link.icon} placeholder={link.placeholder} />
+                        </div>
+                      ))}
+                    </div>
+                    {selectedContactIcon && contactInfoModalOpen && (
+                      <ContactIconsModal
+                        isOpen={contactInfoModalOpen}
+                        closeModal={() => setContactInfoModalOpen(false)}
+                        selectedPlatform={selectedContactIcon}
+                        IconComponent={selectedContactIcon.icon}
+                        userData={userData}
+                        handleContactLinksInputChange={handleContactLinksInputChange}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
+                <div className="mt-4">
+                  <h3 className=" text-black my-3 font-bold uppercase tracking-wide">Redes sociales</h3>
+                  <div className="container mx-auto p-4 bg-[#F3F4F6] rounded-lg flex flex-col gap-4">
+                    <div className="flex gap-3 justify-between flex-wrap">
+                      {socialLinks.map((link, index) => (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setSelectedPlatform(link);
+                            setSocialMediaModalOpen(true);
+                          }}
+                        >
+                          <SocialLinkInput name={link.name} IconComponent={link.icon} placeholder={link.placeholder} />
+                        </div>
+                      ))}
+                    </div>
+                    {selectedPlatform && socialMediaModalOpen && (
+                      <IconsModal
+                        isOpen={socialMediaModalOpen}
+                        closeModal={() => setSocialMediaModalOpen(false)}
+                        selectedPlatform={selectedPlatform}
+                        IconComponent={selectedPlatform.icon}
+                        userData={userData}
+                        handleSocialLinksInputChange={handleSocialLinksInputChange}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-black my-3 font-bold uppercase tracking-wide">Enlaces</h3>
+                  <div className="container mx-auto p-4 bg-[#F3F4F6] rounded-lg flex gap-3 flex-col text-center">
+                    {links.map((link, index) => (
+                      <button
+                        type="button"
+                        key={index}
+                        className="text-black w-full bg-white font-bold py-2 px-4 rounded"
+                        onClick={() => openLinkModal(index)}
+                      >
+                        Enlace {index + 1}
+                      </button>
+                    ))}
+                    <button
+                      disabled={links.length >= 3}
+                      type="button"
+                      className={`text-white w-full font-bold py-2 px-4 rounded ${links.length >= 3 ? "bg-gray-500" : "bg-black"}`}
+                      onClick={addNewLink}
+                    >
+                      Agregar enlace
+                    </button>
+                  </div>
+                </div>
+                {isLinkModalOpen && (
+                  <LinkModal
+                    isOpen={isLinkModalOpen}
+                    onClose={closeLinkModal}
+                    link={activeLinkIndex !== null ? links[activeLinkIndex] : { titulo: "", url: "" }}
+                    saveLink={saveLink}
+                  />
+                )}
+                <div className="fixed inset-x-0 bottom-0 bg-[#F3F4F6] p-4 shadow-md flex gap-4">
+                  <button
+                    type="button"
+                    onClick={saveProfileData}
+                    className="py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center"
+                  >
+                    Ver perfil
+                  </button>
+                  <button
+                    type="submit"
+                    className="py-4 px-5 w-full bg-white border border-black  text-black rounded-lg font-bold text-center"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </>
         ) : (
           <div className="flex justify-center items-center min-h-screen">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-black"></div>
           </div>
         )}
       </div>
-    </Layout>
+    </div>
   );
 };
 

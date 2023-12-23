@@ -10,6 +10,7 @@ import YoutubeIcon from "./Icons/YoutubeIcon";
 import WhatsAppIcon from "./Icons/WhatsAppIcon";
 import Email from "./Icons/Email";
 import PinterestIcon from "./Icons/PinterestIcon";
+import TwitterX from "./Icons/TwitterX";
 
 const SocialLinks = ({ socialLinks }) => {
   const { pinterest, facebook, instagram, linkedin, twitter, tiktok, youtube, whatsapp, email } = socialLinks;
@@ -43,7 +44,7 @@ const SocialLinks = ({ socialLinks }) => {
       platform: "twitter",
       url: twitter,
       link: "https://twitter.com/",
-      icon: <TwitterIcon />,
+      icon: <TwitterX />,
     },
     {
       platform: "youtube",

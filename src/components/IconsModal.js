@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Transition } from "react-transition-group";
 
-const IconsModal = ({ icon, isOpen, closeModal, selectedPlatform, userData, handleSocialLinksInputChange }) => {
+const IconsModal = ({ IconComponent, isOpen, closeModal, selectedPlatform, userData, handleSocialLinksInputChange, placeholder }) => {
   const [inputError, setInputError] = useState("");
-
   const [inputValue, setInputValue] = useState(userData.redes_sociales?.[selectedPlatform.name] || "");
   useEffect(() => {
     setInputValue(userData.redes_sociales?.[selectedPlatform.name] || "");
@@ -32,14 +31,14 @@ const IconsModal = ({ icon, isOpen, closeModal, selectedPlatform, userData, hand
   const handleChange = (e) => {
     validatedInput(e.target.value);
     setInputValue(e.target.value);
-    handleSocialLinksInputChange(e, selectedPlatform.name);
+    handleSocialLinksInputChange(e.target.value, selectedPlatform.name);
   };
 
   return (
     <Transition in={isOpen} timeout={200} unmountOnExit>
       {(state) => (
         <div
-          className={`fixed top-0 left-0 w-full h-full flex items-center justify-center transition-opacity duration-200 ${
+          className={`z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center transition-opacity duration-200 ${
             state === "entering" || state === "entered" ? "opacity-100" : "opacity-0"
           }`}
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
@@ -51,26 +50,22 @@ const IconsModal = ({ icon, isOpen, closeModal, selectedPlatform, userData, hand
             >
               X
             </span>
-            <div className="bg-black rounded-lg p-10">
+            <div className="bg-[#F3F4F6] rounded-lg p-10">
               <div className="mb-4 flex gap-4 justify-between items-center flex-col">
-                <div className="h-[88px]">{icon}</div>
+                <div className="h-[88px]">
+                  <IconComponent />
+                </div>
 
-                <h2 className="text-white capitalize ">{selectedPlatform.name}</h2>
+                <h2 className="text-black capitalize font-bold">{selectedPlatform.name}</h2>
               </div>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleChange}
-                className="border p-2 w-full "
-                placeholder="John.Doe"
-              />
+              <input type="text" value={inputValue} onChange={handleChange} className="border p-2 w-full " placeholder={selectedPlatform.placeholder} />
               {inputError && <div className="text-red-500 mt-1 text-sm">{inputError}</div>}
               <div
                 style={{
                   display: inputError ? "none" : "block",
                 }}
                 onClick={closeModal}
-                className="w-full mt-5 text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                className="py-4 px-5 mt-5 w-full bg-black text-white rounded-lg font-bold text-center"
               >
                 Guardar
               </div>

@@ -1,7 +1,7 @@
 const InputField = ({ placeholder,label, name, type, value, onChange, errorMessage, showLabel = false, ...props }) => (
-  <div className="">
+  <div className="flex flex-col gap-1">
     {showLabel && (
-      <label htmlFor={name} className="block text-sm font-medium text-white">
+      <label htmlFor={name} className="block text-sm font-medium text-black">
         {label}
       </label>
     )}

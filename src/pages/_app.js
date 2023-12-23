@@ -16,3 +16,35 @@ export default function MyApp({ Component, pageProps }) {
     </main>
   )
 }
+
+
+// import { useEffect, useState } from "react";
+// export default function MyApp({ Component, pageProps }) {
+//   const [isClient, setIsClient] = useState(false);
+
+//   useEffect(() => {
+//     setIsClient(true);
+//   }, []);
+
+//   if (!isClient) {
+//     return (
+//       <div className="flex justify-center items-center min-h-screen">
+//         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-black"></div>
+//       </div>
+//     ); // or a minimal loading component
+//   }
+
+//   return (
+//     <main className={roboto.className}>
+//       <div>
+//         {isMobileDevice() ? (
+//           <AuthProvider>
+//             <Component {...pageProps} />
+//           </AuthProvider>
+//         ) : (
+//           <NonMobileWarning />
+//         )}
+//       </div>
+//     </main>
+//   );
+// }

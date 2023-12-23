@@ -26,7 +26,12 @@ export const AuthContext = createContext({
       email: "",
     },
     links: [],
-    botones: [],
+    contact_buttons: {
+      email: "",
+      phone: "",
+      whatsapp: "",
+      website: "",
+    },
     vcard: {
       nombre: "",
       apellido: "",
@@ -70,7 +75,12 @@ const AuthContextProvider = ({ children }) => {
       email: "",
     },
     links: [],
-    botones: [],
+    contact_buttons: {
+      email: "",
+      phone: "",
+      whatsapp: "",
+      website: "",
+    },
     vcard: {
       nombre: "",
       apellido: "",
@@ -88,7 +98,6 @@ const AuthContextProvider = ({ children }) => {
     setUserData((currentData) => ({ ...currentData, ...newData }));
   };
 
-
   const contextValue = {
     isLoading,
     setIsLoading,
@@ -97,7 +106,7 @@ const AuthContextProvider = ({ children }) => {
     userData,
     setUserData,
     updateUserData,
-    updateVCardWithUserInfo
+    updateVCardWithUserInfo,
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
