@@ -1,9 +1,11 @@
+import { useAuthContext } from "@/components/AuthProvider/AuthProvider";
 import ContactIconsModal from "@/components/ContactIconsModal";
 import EmailIcon from "@/components/Icons/EmailIcon";
 import FacebookIcon from "@/components/Icons/FacebookIcon";
 import InstagramIcon from "@/components/Icons/InstagramIcon";
 import LinkedinIcon from "@/components/Icons/LinkedinIcon";
 import PhoneIcon from "@/components/Icons/PhoneIcon";
+import ProfileRounded from "@/components/Icons/ProfileRounded";
 import TikTokIcon from "@/components/Icons/TikTokIcon";
 import TwitterX from "@/components/Icons/TwitterX";
 import WebsiteIcon from "@/components/Icons/WebsiteIcon";
@@ -14,7 +16,6 @@ import InputField from "@/components/InputField";
 import LinkModal from "@/components/LinkModal";
 import SocialLinkInput from "@/components/SocialLinkInput";
 import withAuth from "@/components/withAuth";
-import { API } from "@/utils/constant";
 import { getToken, removeToken } from "@/utils/helpers";
 import axios from "axios";
 import Image from "next/image";
@@ -22,9 +23,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import BlackLogo from "../../../../public/images/linki-logo-black.png";
-import ProfileRounded from "@/components/Icons/ProfileRounded";
-import { fetchLoggedInUser } from "@/utils/fetchUser";
-import { useAuthContext } from "@/components/AuthProvider/AuthProvider";
 
 const socialLinks = [
   { name: "instagram", icon: InstagramIcon, placeholder: "john.doe" },
@@ -113,20 +111,16 @@ const ProfileEdit = () => {
   const fetchProfileData = async (slug) => {
     try {
       setLoading(true);
-      console.log("Fetching profile data for slug:", slug); // Log the slug
-      const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles?filters[slug][$eq]=${slug}&populate=deep`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-      console.log(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`);
-      console.log("API response:", response); // Log the response
       if (response.data && response.data.data.length > 0) {
         setProfileData(response.data.data[0]);
         setProfileID(response.data.data[0].id);
       } else {
         setError("Profile not found");
-        console.log("profile not found");
         router.push("/");
       }
     } catch (error) {
@@ -185,7 +179,7 @@ const ProfileEdit = () => {
       };
 
       // Get the current state of the resource
-      const getResponse = await axios.get(`${API}/profiles/${profileID}?populate=deep`, {
+      const getResponse = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles/${profileID}?populate=deep`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
@@ -201,7 +195,7 @@ const ProfileEdit = () => {
 
       // Make the PUT request
       const putResponse = await axios.put(
-        `${API}/profiles/${profileID}`,
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles/${profileID}`,
         { data: updatedData },
         {
           headers: {
@@ -210,9 +204,6 @@ const ProfileEdit = () => {
           },
         }
       );
-
-      const data = putResponse.data;
-      console.log(data);
     } catch (error) {
       console.error(error);
       setError("Error while updating profile data");
@@ -281,7 +272,9 @@ const ProfileEdit = () => {
               <div>
                 <h3 className="">Bienvenido,</h3>
                 <h1 className="font-bold text-2xl">{userData.nombre_completo?.split(" ")[0]}</h1>
-                <span onClick={handleEndSession} className="text-red-500 font-bold">Terminar sesión</span>
+                <span onClick={handleEndSession} className="text-red-500 font-bold">
+                  Terminar sesión
+                </span>
               </div>
               <Link href="/">
                 <Image src={BlackLogo} className="w-[125px]" alt="Linki logo" />

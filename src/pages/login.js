@@ -5,7 +5,6 @@ import Logo from "../../public/images/linki-logo-black.png";
 import Image from "next/image";
 import Link from "next/link";
 import { setToken } from "@/utils/helpers";
-import { API } from "@/utils/constant";
 import { useRouter } from "next/router";
 import BackArrow from "@/components/Icons/BackArrow";
 import SignUpHeading from "@/components/SignUpHeading";
@@ -28,7 +27,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await axios.post(`${API}/auth/local`, userData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local`, userData);
       const { jwt, user } = response.data;
       setToken(jwt); // Guardar token en localStorage
       router.push(`/${user.username}/profile/edit`); // Redireccionar a la página de edición de perfil

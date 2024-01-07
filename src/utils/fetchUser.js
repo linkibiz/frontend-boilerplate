@@ -1,16 +1,15 @@
+import { BEARER } from "@/utils/constant";
 import axios from "axios";
-import { API, BEARER } from "@/utils/constant";
 
 export const fetchLoggedInUser = async (token) => {
   if (!token) {
-    console.log("No authentication token found.")
     setError("No authentication token found.");
     return;
   }
 
   setIsLoading(true);
   try {
-    const response = await axios.get(`${API}/users/me?populate=deep`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_URL}/users/me?populate=deep`, {
       headers: { Authorization: `${BEARER} ${token}` },
     });
 

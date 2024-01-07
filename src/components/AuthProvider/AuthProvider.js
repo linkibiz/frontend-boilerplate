@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { AUTH_TOKEN, API, BEARER } from "@/utils/constant";
+import { BEARER } from "@/utils/constant";
 import { getToken } from "@/utils/helpers";
 import axios from "axios";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
 
@@ -91,7 +91,7 @@ const AuthProvider = ({ children }) => {
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API}/users/me?populate=deep`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_URL}/users/me?populate=deep`, {
         headers: { Authorization: `${BEARER} ${token}` },
       });
 
