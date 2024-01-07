@@ -5,19 +5,18 @@ import Logo from "../../public/images/linki-logo-black.png";
 import Image from "next/image";
 import Link from "next/link";
 import { setToken } from "@/utils/helpers";
-import { useAuthContext } from "@/context/auth-context";
 import { API } from "@/utils/constant";
 import { useRouter } from "next/router";
 import BackArrow from "@/components/Icons/BackArrow";
 import SignUpHeading from "@/components/SignUpHeading";
 import InputField from "@/components/InputField";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useAuthContext } from "@/components/AuthProvider/AuthProvider";
 
 const Login = () => {
   const { userData, setUserData } = useAuthContext();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
   const [error, setError] = useState("");
 
   const handleUserInputChange = (e) => {
@@ -26,32 +25,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setError("");
+
     try {
       const response = await axios.post(`${API}/auth/local`, userData);
-
-      const data = response.data;
-      console.log(data);
-      if (data?.error) {
-        throw data?.error;
-      } else {
-        // set the token
-        setToken(data.jwt);
-
-        // set the user
-        console.log("data user", data.user);
-        setUserData(data.user);
-
-        localStorage.setItem("userData", JSON.stringify(data.user));
-        const url = data.user.username;
-        router.push(`/${url}/profile/edit`);
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error?.message ?? "Something went wrong!");
-    } finally {
-      setIsLoading(false);
+      const { jwt, user } = response.data;
+      setToken(jwt); // Guardar token en localStorage
+      router.push(`/${user.username}/profile/edit`); // Redireccionar a la página de edición de perfil
+    } catch (err) {
+      setError("Error en el inicio de sesión"); // Manejar errores de login
     }
+  };
+
+  const handleBackNavigation = () => {
+    router.push("/");
   };
 
   return (
@@ -60,7 +47,7 @@ const Login = () => {
         <Image src={Logo} alt="linki logo" width={100} />
       </div>
       <div className="bg-white flex flex-col gap-3">
-        <div className="h-4 w-4">
+        <div className="h-4 w-4" onClick={handleBackNavigation}>
           <BackArrow />
         </div>
         <SignUpHeading title="Log in" subtitle="Ingrese su email y contraseña en los siguientes campos" />

@@ -1,9 +1,17 @@
-import React, { useCallback, useState } from "react";
-import { AuthContext } from "@/context/auth-context";
-import { API, BEARER } from "@/utils/constant";
-import { useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { AUTH_TOKEN, API, BEARER } from "@/utils/constant";
 import { getToken } from "@/utils/helpers";
 import axios from "axios";
+
+export const AuthContext = createContext();
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuthContext must be used within an AuthProvider");
+  }
+  return context;
+};
 
 const AuthProvider = ({ children }) => {
   const initialUserData = {
@@ -14,7 +22,6 @@ const AuthProvider = ({ children }) => {
     identifier: "",
     slug: "",
     nombre_completo: "",
-    id: null,
     sobre_mi: "",
     redes_sociales: {
       facebook: "",
@@ -55,24 +62,6 @@ const AuthProvider = ({ children }) => {
 
   const authToken = getToken();
 
-  useEffect(() => {
-    const isSignupFlow = window.location.pathname.includes("/signup");
-    // Only set userData from localStorage if we are not in the signup flow
-    if (!isSignupFlow) {
-      const storedUserData = localStorage.getItem("userData");
-      if (storedUserData) {
-        setUserData(JSON.parse(storedUserData));
-      }
-    }
-  }, []);
-
-  // Effect to store user data in localStorage when userData changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("userData", JSON.stringify(userData));
-    }
-  }, [userData]);
-
   const updateUserData = (newData) => {
     setUserData((currentData) => ({ ...currentData, ...newData }));
   };
@@ -94,6 +83,7 @@ const AuthProvider = ({ children }) => {
   }, [userData.nombre_completo, setUserData]);
 
   const fetchLoggedInUser = async (token) => {
+    console.log("fetcheando data de usuario");
     if (!token) {
       setError("No authentication token found.");
       return;
@@ -163,15 +153,23 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (authToken) {
+      console.log("useffect para fecthLoggedInUser");
       fetchLoggedInUser(authToken);
     }
   }, [authToken]);
 
-  return (
-    <AuthContext.Provider value={{ updateVCardWithUserInfo, updateUserData, userData, setUserData, isLoading, setIsLoading, error }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  // Proporciona valores y funciones a través del contexto
+  const contextValue = {
+    userData,
+    setUserData,
+    updateUserData,
+    updateVCardWithUserInfo,
+    isLoading,
+    setIsLoading,
+    error,
+  };
+
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

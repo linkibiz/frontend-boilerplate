@@ -14,7 +14,8 @@ import TwitterX from "./Icons/TwitterX";
 
 const SocialLinks = ({ socialLinks }) => {
   const { pinterest, facebook, instagram, linkedin, twitter, tiktok, youtube, whatsapp, email } = socialLinks;
-  const nullValuesCount = Object.values(socialLinks).filter((value) => value === null).length;
+  const hasSocialLinks = Object.entries(socialLinks).some(([key, value]) => key !== "id" && value);
+  console.log(hasSocialLinks)
   const socialMediaPlatforms = [
     {
       platform: "facebook",
@@ -61,12 +62,11 @@ const SocialLinks = ({ socialLinks }) => {
   ];
   return (
     <>
-      {nullValuesCount < 7 && <h2 className="font-bold">Redes sociales</h2>}
-
+      {hasSocialLinks && <h2 className="font-bold">Redes sociales</h2>}
       <ul className={`w-[370px] overflow-x-auto overflow-y-hidden whitespace-nowrap flex gap-6 justify-start`}>
         {socialMediaPlatforms.map(({ platform, url, icon, link }) =>
           url ? (
-            <li className={`rounded-full bg-transparent ${nullValuesCount < 4 ? "w-[25%]" : "w-[15%]"} min-w-[16%]`} key={platform}>
+            <li className={`rounded-full bg-transparent ${hasSocialLinks ? "w-[25%]" : "w-[15%]"} min-w-[16%]`} key={platform}>
               <Link className="w-full block" href={`${link}${url}`} target="_blank">
                 {icon}
               </Link>

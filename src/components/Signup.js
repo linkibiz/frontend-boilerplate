@@ -1,28 +1,23 @@
-import { useAuthContext } from "@/context/auth-context";
-import { setToken } from "@/utils/helpers";
 import axios from "axios";
+import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import BackArrow from "./Icons/BackArrow";
 import InputField from "./InputField";
 import LoadingSpinner from "./LoadingSpinner";
 import SignUpHeading from "./SignUpHeading";
-import { debounce } from "lodash";
+import { useAuthContext } from "./AuthProvider/AuthProvider";
 
-const Signup = ({ onNextStep, onSubmit }) => {
-  const [signupData, setSignupData] = useState({
-    email: "",
-    password: "",
-    username: "",
-  });
+const Signup = ({ onNextStep, error }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const { setUserData, updateUserData } = useAuthContext();
+  const { setUserData, updateUserData, userData } = useAuthContext();
   const [usernameError, setUsernameError] = useState("");
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const [formState, setFormState] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const isValidUsername = (username) => {
     return !/[@\s]/.test(username);
@@ -30,7 +25,7 @@ const Signup = ({ onNextStep, onSubmit }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSignupData({ ...signupData, [name]: value });
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const validateUsernameOnInput = (username) => {
@@ -66,7 +61,7 @@ const Signup = ({ onNextStep, onSubmit }) => {
 
   const handleUserChange = (e) => {
     const newUsername = e.target.value;
-    setUsername(newUsername);
+    setFormState((prevState) => ({ ...prevState, username: newUsername }));
 
     // Reset errors if input is empty
     if (newUsername === "") {
@@ -90,28 +85,8 @@ const Signup = ({ onNextStep, onSubmit }) => {
 
   const handleContinue = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, signupData);
-
-      const userData = response.data;
-      console.log("USER DATA", userData.jwt);
-      if (userData.error) {
-        throw new Error(userData.error);
-      } else {
-        setToken(userData.jwt);
-        // Update the AuthProvider's userData with the new user's data
-        setUserData(userData.user);
-        onSubmit(userData.user.id);
-        onNextStep();
-      }
-    } catch (err) {
-      setError("Corre ya existe. Intente con otro");
-    } finally {
-      setIsLoading(false);
-    }
+    updateUserData(formState);
+    onNextStep();
   };
 
   return (
@@ -124,8 +99,8 @@ const Signup = ({ onNextStep, onSubmit }) => {
             placeholder="Usuario"
             name="username"
             type="text"
-            value={signupData.username}
-            onChange={handleInputChange}
+            value={formState.username}
+            onChange={handleUserChange}
             errorMessage={usernameError}
           />
           {isCheckingUsername && (
@@ -134,18 +109,18 @@ const Signup = ({ onNextStep, onSubmit }) => {
             </div>
           )}
         </div>
-        <InputField label="Email" placeholder="Email" name="email" type="email" value={signupData.email} onChange={handleInputChange} />
+        <InputField label="Email" placeholder="Email" name="email" type="email" value={formState.email} onChange={handleInputChange} />
         <InputField
           label="Contraseña"
           name="password"
           placeholder="Password"
           type="password"
-          value={signupData.password}
+          value={formState.password}
           onChange={handleInputChange}
         />
         <button
           type="submit"
-          disabled={isLoading || isCheckingUsername || !isUsernameAvailable || !isValidUsername(signupData.username)}
+          disabled={isLoading || isCheckingUsername || !isUsernameAvailable || !isValidUsername(userData.username)}
           className={`mt-5 py-4 px-5 w-full ${
             isLoading || isCheckingUsername || !isUsernameAvailable ? "bg-[#303030]" : "bg-[#000]"
           } text-white rounded-lg font-bold text-center `}

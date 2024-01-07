@@ -1,7 +1,7 @@
-import { useAuthContext } from "@/context/auth-context";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import ConfettiExplosion from "react-confetti-explosion";
+import { useAuthContext } from "./AuthProvider/AuthProvider";
 
 const Congratulations = ({ slug }) => {
   const [isExploding, setIsExploding] = useState(true);

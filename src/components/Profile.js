@@ -2,7 +2,8 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import BrushIcon from "./Icons/BrushIcon";
 import { useRouter } from "next/router";
-import { useAuthContext } from "@/context/auth-context";
+import { getToken } from "@/utils/helpers";
+import { useAuthContext } from "./AuthProvider/AuthProvider";
 
 const Profile = ({ profileData }) => {
   const { userData } = useAuthContext();
@@ -39,7 +40,7 @@ const Profile = ({ profileData }) => {
             />
           )}
           <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-50">
-            {isUserOwnProfile() && (
+            {isUserOwnProfile() && getToken() && (
               <button onClick={navigateToEdit} className="bg-[#20B6E4] rounded-tr-full rounded-br-full ">
                 <BrushIcon />
               </button>

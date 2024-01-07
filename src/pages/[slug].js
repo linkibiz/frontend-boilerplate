@@ -19,7 +19,7 @@ import BrushIcon from "@/components/Icons/BrushIcon";
 const Perfil = ({ data }) => {
   const router = useRouter();
   const { slug } = router.query;
-
+  console.log(data.attributes.redes_sociales)
   return (
     <HomeLayout pageName={slug}>
       <LoadingComponent>

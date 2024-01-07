@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import axios from "axios";
-import { AuthContext } from "@/context/auth-context";
 import FacebookIcon from "./Icons/FacebookIcon";
 import InstagramIcon from "./Icons/InstagramIcon";
 import TwitterIcon from "./Icons/TwitterIcon";
@@ -15,6 +14,7 @@ import ContactModal from "./ContactModal";
 import LinksIcon from "./Icons/LinksIcon";
 import LinksModal from "./LinksModal";
 import LoadingSpinner from "./LoadingSpinner";
+import { AuthContext } from "./AuthProvider/AuthProvider";
 
 const CreateProfile = ({ onSubmit, userId }) => {
   const { userData, setUserData } = useContext(AuthContext);

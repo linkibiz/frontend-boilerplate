@@ -14,9 +14,8 @@ import InputField from "@/components/InputField";
 import LinkModal from "@/components/LinkModal";
 import SocialLinkInput from "@/components/SocialLinkInput";
 import withAuth from "@/components/withAuth";
-import { useAuthContext } from "@/context/auth-context";
 import { API } from "@/utils/constant";
-import { getToken } from "@/utils/helpers";
+import { getToken, removeToken } from "@/utils/helpers";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import BlackLogo from "../../../../public/images/linki-logo-black.png";
 import ProfileRounded from "@/components/Icons/ProfileRounded";
 import { fetchLoggedInUser } from "@/utils/fetchUser";
+import { useAuthContext } from "@/components/AuthProvider/AuthProvider";
 
 const socialLinks = [
   { name: "instagram", icon: InstagramIcon, placeholder: "john.doe" },
@@ -44,24 +44,34 @@ const contactLinks = [
 
 const ProfileEdit = () => {
   const [profileID, setProfileID] = useState();
-  const [isLoading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState();
-  const { userData, setUserData } = useAuthContext();
+
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedContactIcon, setSelectedContactIcon] = useState(null);
   const [error, setError] = useState("");
   const [socialMediaModalOpen, setSocialMediaModalOpen] = useState(false);
   const [contactInfoModalOpen, setContactInfoModalOpen] = useState(false);
-  const router = useRouter();
-  const { slug } = router.query;
   const [links, setLinks] = useState([]);
   const [activeLinkIndex, setActiveLinkIndex] = useState(null);
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
   const [previewUrl, setPreviewUrl] = useState();
   const fileInputRef = useRef(null);
+  const router = useRouter();
+  const { slug: slugFromUrl } = router.query;
+  const [slug, setSlug] = useState(slugFromUrl);
+  const [isLoading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState({});
+  const { userData, setUserData } = useAuthContext();
 
-  // If there is an existing avatar, set it as the preview URL
+  useEffect(() => {
+    // Si no hay slug en la URL, redirige o maneja de otra manera
+    if (!slug) {
+      router.push("/login");
+      return;
+    }
+    fetchProfileData(slug);
+  }, [slug, router]);
+
   useEffect(() => {
     if (userData.avatar) {
       setPreviewUrl(userData.avatar);
@@ -100,103 +110,7 @@ const ProfileEdit = () => {
     });
   };
 
-  useEffect(() => {
-    // Function to check the slug and fetch profile data
-    const checkSlugAndFetchProfile = async () => {
-      if (!slug) return;
-
-      const authToken = getToken();
-      if (!authToken) {
-        router.push("/login");
-        return;
-      }
-
-      // Fetching user data if not available
-      if (!userData || !userData.id) {
-        try {
-          await fetchLoggedInUser(authToken);
-        } catch (error) {
-          router.push("/login");
-          return;
-        }
-      }
-
-      // Check if the slug in the URL matches the logged-in user's username
-      if (userData.slug !== slug) {
-        router.push(`/${userData.slug}/profile/edit`);
-        return;
-      }
-
-      // Fetch profile data
-      await fetchProfileData();
-    };
-
-    checkSlugAndFetchProfile();
-  }, [slug, router]); // Only re-run when slug or router changes
-
-  useEffect(() => {
-    // Return early if slug is undefined
-    if (!slug) return;
-
-    const authToken = getToken();
-    if (!authToken) {
-      router.push("/login");
-      return;
-    }
-
-    const fetchProfileData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-
-        if (response.data && response.data.data.length > 0) {
-          setProfileData(response.data.data[0]);
-          setProfileID(response.data.data[0].id);
-        } else {
-          setError("Profile not found");
-          router.push("/");
-        }
-      } catch (error) {
-        console.error(`Error fetching user: ${error.message}`);
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Fetching user data if not available
-    if (!userData || !userData.id) {
-      fetchLoggedInUser(authToken)
-        .then(() => {
-          // Check if the slug in the URL matches the logged-in user's username
-          if (userData.slug !== slug) {
-            router.push(`/${userData.slug}/profile/edit`);
-            return;
-          }
-
-          // Fetch profile data
-          fetchProfileData();
-        })
-        .catch(() => {
-          router.push("/login");
-        });
-    } else {
-      // Check if the slug in the URL matches the logged-in user's username
-      if (userData.slug !== slug) {
-        router.push(`/${userData.slug}/profile/edit`);
-        return;
-      }
-
-      // Fetch profile data
-      fetchProfileData();
-    }
-  }, [slug]); // Only slug in dependency array
-
-  const fetchProfileData = async () => {
+  const fetchProfileData = async (slug) => {
     try {
       setLoading(true);
       console.log("Fetching profile data for slug:", slug); // Log the slug
@@ -205,9 +119,11 @@ const ProfileEdit = () => {
           Authorization: `Bearer ${getToken()}`,
         },
       });
+      console.log(`${API}/profiles?filters[slug][$eq]=${slug}&populate=deep`);
       console.log("API response:", response); // Log the response
       if (response.data && response.data.data.length > 0) {
         setProfileData(response.data.data[0]);
+        setProfileID(response.data.data[0].id);
       } else {
         setError("Profile not found");
         console.log("profile not found");
@@ -226,12 +142,14 @@ const ProfileEdit = () => {
       if (selectedImage) {
         const formData = new FormData();
         formData.append("files", selectedImage);
-        formData.append("ref", "api::profile.profile"); // La entidad a la que se asocia la imagen
-        formData.append("refId", profileID); // The user ID to associate the image with
+        formData.append("ref", "api::profile.profile");
+        formData.append("refId", profileID);
         formData.append("field", "avatar");
         const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/upload`, formData);
-        if (response.status !== 200) {
-          throw new Error(response.data.message);
+        if (response.status === 200 && response.data && response.data.length > 0) {
+          const newAvatarUrl = response.data[0].url;
+          setUserData({ ...userData, avatar: newAvatarUrl }); // Update global state
+          return newAvatarUrl;
         }
       }
     } catch (error) {
@@ -308,10 +226,6 @@ const ProfileEdit = () => {
     router.push(`/${userData.slug}`);
   };
 
-  const myLoader = ({ src }) => {
-    return src;
-  };
-
   const openLinkModal = (index) => {
     setActiveLinkIndex(index);
     setIsLinkModalOpen(true);
@@ -328,8 +242,7 @@ const ProfileEdit = () => {
   };
 
   const saveLink = (link) => {
-    console.log(link);
-    let updatedLinks = [...links];
+    let updatedLinks = [...userData.links];
 
     if (activeLinkIndex !== null) {
       updatedLinks[activeLinkIndex] = link;
@@ -337,10 +250,8 @@ const ProfileEdit = () => {
       updatedLinks.push(link);
     }
 
-    // Filter out completely empty links
     updatedLinks = updatedLinks.filter((l) => l.titulo.trim() !== "" || l.url.trim() !== "");
-
-    setLinks(updatedLinks);
+    setUserData({ ...userData, links: updatedLinks }); // Update global state
     closeLinkModal();
   };
 
@@ -356,6 +267,11 @@ const ProfileEdit = () => {
     fileInputRef.current.click();
   };
 
+  const handleEndSession = () => {
+    removeToken();
+    router.push("/");
+  };
+
   return (
     <div className="bg-[#F3F4F6] w-[425px] flex flex-col min-h-[100vh] p-3">
       <div className="flex flex-col px-2 py-4 items-center min-h-screen pt-6 sm:justify-center sm:pt-0">
@@ -365,6 +281,7 @@ const ProfileEdit = () => {
               <div>
                 <h3 className="">Bienvenido,</h3>
                 <h1 className="font-bold text-2xl">{userData.nombre_completo?.split(" ")[0]}</h1>
+                <span onClick={handleEndSession} className="text-red-500 font-bold">Terminar sesión</span>
               </div>
               <Link href="/">
                 <Image src={BlackLogo} className="w-[125px]" alt="Linki logo" />

@@ -1,4 +1,3 @@
-import AuthContextProvider from '@/context/auth-context'
 import '@/styles/globals.css'
 import { Lato, Roboto } from 'next/font/google'
 import AuthProvider from '@/components/AuthProvider/AuthProvider'

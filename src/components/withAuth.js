@@ -1,17 +1,17 @@
-import { useAuthContext } from "@/context/auth-context";
 import { getToken } from "@/utils/helpers";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useAuthContext } from "./AuthProvider/AuthProvider";
 const withAuth = (WrappedComponent) => {
   const Wrapper = (props) => {
-    const token = getToken()
-    const { userData } = useAuthContext();
+    const token = getToken();
+
     const router = useRouter();
     useEffect(() => {
       if (!token) {
-        router.replace("/login");
+        router.push("/login"); // Redirecciona a login si no hay token
       }
-    }, [userData]);
+    }, [token, router]);
 
     return <WrappedComponent {...props} />;
   };

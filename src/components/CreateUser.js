@@ -1,4 +1,3 @@
-import { useAuthContext } from "@/context/auth-context";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -7,8 +6,14 @@ import ProfileRounded from "./Icons/ProfileRounded";
 import InputField from "./InputField";
 import LoadingSpinner from "./LoadingSpinner";
 import SignUpHeading from "./SignUpHeading";
+import { setToken } from "@/utils/helpers";
+import { useAuthContext } from "./AuthProvider/AuthProvider";
 
-const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
+const CreateUser = ({ onSubmit, onNextStep, onBack, handleEmailExistsError }) => {
+  const [newUserData, setNewUserData] = useState({
+    nombre_completo: "",
+    ocupacion: "",
+  });
   const { updateUserData, userData, updateVCardWithUserInfo, setUserData } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState();
@@ -21,6 +26,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [userProfileId, setUserProfileId] = useState();
   const [isInputValid, setIsInputValid] = useState(false);
+  const [imageError, setImageError] = useState("");
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -58,12 +64,18 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
     }
   }, [updateVCardWithUserInfo, userData.nombre_completo]);
 
+  useEffect(() => {
+    if (userData && userData.nombre_completo) {
+      setIsInputValid(userData.nombre_completo.trim().length > 0);
+    }
+  }, [userData, userData?.nombre_completo]);
+
   const triggerFileSelectPopup = () => fileInputRef.current.click();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setNewUserData({ ...newUserData, [name]: value });
 
-    // Ensure userData and userData.vcard are defined before using them
     if (userData && userData.vcard && name in userData.vcard) {
       updateUserData({
         vcard: {
@@ -99,7 +111,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
     }
   };
 
-  const generateUpdatedUserData = (userData) => {
+  const generateUpdatedUserData = (userData, userId) => {
     const { ocupacion, vcard, email, username } = userData;
 
     const updatedUserData = {
@@ -122,28 +134,64 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
   const handleSubmit = async (e) => {
     setIsLoading(true);
     e.preventDefault();
-    try {
-      const updatedUserData = generateUpdatedUserData(userData);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: updatedUserData });
 
-      if (response.status !== 200) {
-        throw new Error(response.data.message);
+    try {
+      const accountData = {
+        username: userData.username,
+        email: userData.email,
+        password: userData.password,
+        // Add other account fields if needed
+      };
+
+      const registerResponse = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`, accountData);
+
+      if (registerResponse.status !== 200) {
+        console.log("ups");
       }
-      setUserData(updatedUserData);
-      const userSlug = response.data.data.attributes.slug;
-      setUserProfileId(response.data.data.id);
+      console.log({ registerResponse });
+      const userId = registerResponse.data.user.id;
+      setToken(registerResponse.data.jwt);
+      console.log({ userId });
+
+      // Update the AuthContext's userData with the new user's data
+      setUserData(registerResponse.data.user);
+
+      // Then, create or update the user profile with additional data
+      const profileData = generateUpdatedUserData(userData, userId);
+      const profileResponse = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_URL}/profiles`, { data: profileData });
+      console.log({ profileData });
+      console.log({ profileResponse });
+      if (profileResponse.status !== 200) {
+        throw new Error(profileResponse.data.message);
+      }
+
+      const userSlug = profileResponse.data.data.attributes.slug;
+      setUserProfileId(profileResponse.data.data.id);
       onSubmit(userSlug);
+      console.log({ userSlug });
+      console.log(profileResponse.data.data.id);
       handleNext();
     } catch (error) {
       console.error("Error updating user data:", error.message);
       setError(error.message);
+      handleEmailExistsError();
     } finally {
       setIsLoading(false);
     }
   };
+
   const handleImageSubmit = async (e) => {
     e.preventDefault();
     setSettingAvatar(true);
+
+    if (!selectedImage) {
+      setImageError("Please upload a profile picture.");
+      return;
+    }
+
+    // Clear any existing error message
+    setImageError("");
+
     try {
       if (selectedImage) {
         const formData = new FormData();
@@ -176,7 +224,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
               label="What's your name?"
               name="nombre_completo"
               type="text"
-              value={userData?.nombre_completo || ""}
+              value={newUserData.nombre_completo}
               onChange={handleInputChange}
               placeholder="John Doe"
             />
@@ -203,7 +251,7 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
               label="Company info?"
               name="ocupacion"
               type="text"
-              value={userData?.ocupacion || ""}
+              value={newUserData.ocupacion}
               onChange={handleInputChange}
             />
             <button className="mt-5 py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center" onClick={handleNext}>
@@ -909,7 +957,14 @@ const CreateUser = ({ onSubmit, onNextStep, onBack, userId }) => {
                   </div>
                 )}
               </div>
-              <button type="submit" className="mt-5 py-4 px-5 w-full bg-black text-white rounded-lg font-bold text-center">
+              {imageError && <div className="text-red-500 mt-2">{imageError}</div>}
+              <button
+                disabled={!selectedImage}
+                type="submit"
+                className={`mt-5 py-4 px-5 w-full ${
+                  !selectedImage ? "bg-[#303030]" : "bg-[#000]"
+                } text-white rounded-lg font-bold text-center`}
+              >
                 {settingAvatar ? <LoadingSpinner /> : "Continuar"}
               </button>
             </form>
