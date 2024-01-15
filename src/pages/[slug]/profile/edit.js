@@ -190,7 +190,7 @@ const ProfileEdit = () => {
                     </div>
                   </div>
                   <button className="text-black w-full bg-white font-bold py-2 px-4 rounded" onClick={openModal}>
-                    AGREGAR
+                    AGREGAR 
                   </button>
 
                   <EditSocialsModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
